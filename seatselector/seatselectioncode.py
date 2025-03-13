@@ -71,4 +71,3 @@ def main():
     
 if __name__ == "__main__": 
     main()
-#move images into their own folder and use filepaths cause image management innit
