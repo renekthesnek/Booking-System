@@ -41,11 +41,12 @@ class SeatSelectionForm(QWidget):
             for j in ("A","B"):
                 self.rows.append(self.ui.__getattribute__("Row"+i+"_"+j))
 
-if __name__ == "__main__":
-    print(sys.argv)
+def main():
     app = QApplication(sys.argv)
     window = SeatSelectionForm()
     window.show()
     sys.exit(app.exec_())
     
+if __name__ == "__main__": 
+    main()
 #move images into their own folder and use filepaths cause image management innit
