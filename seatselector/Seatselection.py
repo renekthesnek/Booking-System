@@ -2598,7 +2598,7 @@ class Ui_Dialog(object):
         self.listWidget.setGeometry(QtCore.QRect(700, 120, 291, 381))
         font = QtGui.QFont()
         font.setFamily("Open Sans Extrabold")
-        font.setPointSize(10)
+        font.setPointSize(14)
         self.listWidget.setFont(font)
         self.listWidget.setStyleSheet("color: rgb(238, 238, 238);")
         self.listWidget.setFrameShape(QtWidgets.QFrame.Box)

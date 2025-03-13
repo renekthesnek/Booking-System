@@ -15,7 +15,7 @@ class ConfirmBookingForm(QDialog):
         super(ConfirmBookingForm, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        self.show()
+        self.setWindowTitle("Booking Confirmation")
 
 def main():
     app = QApplication(sys.argv)
