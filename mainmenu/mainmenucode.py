@@ -1,11 +1,19 @@
 import sys
+import os 
 
-from PyQt5.QtWidgets import QApplication, QWidget
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from PyQt5.QtWidgets import QApplication, QDialog
 from PyQt5.QtGui import QPixmap
 
-from MainMenu import *
+from seatselector import SeatSelectionForm
 
-class MainMenuForm(QWidget):
+if __name__ == "__main__":
+    from MainMenu import Ui_Dialog
+else:
+    from .MainMenu import Ui_Dialog
+
+class MainMenuForm(QDialog):
     def __init__(self):
         super().__init__()
         self.ui = Ui_Dialog()
@@ -22,8 +30,14 @@ class MainMenuForm(QWidget):
         return
 
     def no_login(self):
-        return
-    
+        self.switch_to_seatselector()
+
+    def switch_to_seatselector(self):
+        self.close()
+        newwindow = SeatSelectionForm()
+        newwindow.show()
+        newwindow.exec_()
+
 def main():
     app = QApplication(sys.argv)
     window = MainMenuForm()
