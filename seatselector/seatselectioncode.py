@@ -26,6 +26,8 @@ class SeatSelectionForm(QDialog):
         self.seats = []
         self.rows = []
         self.populate_lists()
+        self.emptyabspath = os.path.join(os.path.dirname(__file__), "..", "images", "empty.png")
+        self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..", "images", "highlighted.png")
         
     def mousePressEvent(self, event):
         for seatdata in self.seats:
@@ -38,11 +40,11 @@ class SeatSelectionForm(QDialog):
     def toggle_seat_status(self, seatdata):
         seatlabel = seatdata["label_object"]
         if seatdata["status"] == "empty":
-            seatlabel.setPixmap(QPixmap(".\\seatselector\\../images/highlighted.png"))
+            seatlabel.setPixmap(QPixmap(self.highlightedabspath))
             seatdata["status"] = "highlighted"
             self.ui.listWidget.addItem(seatdata["seat_id"])
         elif seatdata["status"] == "highlighted":
-            seatlabel.setPixmap(QPixmap(".\\seatselector\\../images/empty.png"))
+            seatlabel.setPixmap(QPixmap(self.emptyabspath))
             seatdata["status"] = "empty"
             for index in range(self.ui.listWidget.count()):
                 item = self.ui.listWidget.item(index)
