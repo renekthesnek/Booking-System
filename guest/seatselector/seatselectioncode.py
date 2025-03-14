@@ -1,11 +1,9 @@
 import sys
 import os
 
-
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from PyQt5.QtWidgets import QApplication, QDialog
+from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 
@@ -14,7 +12,6 @@ if __name__ == "__main__":
 else:
     from .Seatselection import Ui_Dialog
 
-from bookingConformation import ConfirmBookingForm
 
 class SeatSelectionForm(QDialog):
     def __init__(self):
@@ -22,12 +19,18 @@ class SeatSelectionForm(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setWindowTitle("Seat Selector")
-        self.ui.pushButton.clicked.connect(self.switch_to_confirm_booking)
+        self.ui.pushButton.clicked.connect(self.confirm_booking)
         self.seats = []
         self.rows = []
         self.populate_lists()
         self.emptyabspath = os.path.join(os.path.dirname(__file__), "..", "images", "empty.png")
         self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..", "images", "highlighted.png")
+    
+    def confirm_booking(self):
+        if self.ui.listWidget.count() > 0:
+            self.switch_to_confirm_booking()
+        else:
+            QMessageBox.warning(self, "Warning", "No Seats Selected!")
         
     def mousePressEvent(self, event):
         for seatdata in self.seats:
@@ -63,6 +66,7 @@ class SeatSelectionForm(QDialog):
 
     def switch_to_confirm_booking(self):
         self.close()
+        from bookingConformation import ConfirmBookingForm
         newwindow = ConfirmBookingForm()
         newwindow.show()
         newwindow.exec_()
@@ -75,4 +79,3 @@ def main():
     
 if __name__ == "__main__": 
     main()
-#move images into their own folder and use filepaths cause image management innit

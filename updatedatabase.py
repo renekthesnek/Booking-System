@@ -22,6 +22,7 @@ def update_seats():
             elif number in range(11,20):
                 seatRow = f"Row{Row}_B"
             cursor.execute("INSERT INTO Seats Values(?,?)", (seatid,seatRow))
+            print(f"Added {seatid} {seatRow} to database")
     rows_affected = cursor.rowcount
     if rows_affected > 0:
         cnxn.commit()
