@@ -14,17 +14,26 @@ else:
 
 
 class StaffConsoleForm(QDialog):
-    def __init__(self):
+    def __init__(self, UserName="No Parsed Username"):
         super(StaffConsoleForm, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setWindowTitle("Booking Confirmation")
         self.ui.BackToMenuButton.clicked.connect(self.switch_to_main_menu)
+        self.ui.ToPeformanceMenuButton.clicked.connect(self.switch_to_CreateEditConsole)
+        self.ui.loggedindisplay.setText("Logged in as: " + UserName)
 
     def switch_to_main_menu(self):
         self.close()
         from Guest import MainMenuForm
         newwindow = MainMenuForm()
+        newwindow.show()
+        newwindow.exec_()
+    
+    def switch_to_CreateEditConsole(self):
+        self.close()
+        from CreateEdit import CreateEditConsoleForm
+        newwindow = CreateEditConsoleForm()
         newwindow.show()
         newwindow.exec_()
 def main():

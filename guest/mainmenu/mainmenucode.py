@@ -1,10 +1,12 @@
 import sys
 import os 
+import hashlib
+import pyodbc
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-from PyQt5.QtWidgets import QApplication, QDialog
+from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox
 from PyQt5.QtGui import QPixmap
 
 from seatselector import SeatSelectionForm
@@ -29,7 +31,22 @@ class MainMenuForm(QDialog):
         return
 
     def staff_login(self):
-        self.switch_to_staff_console()
+        username = self.ui.StaffLoginUsername.text()
+        password = self.ui.StaffLoginPassword.text()
+        passwordhash = hashlib.sha224(password.encode()).hexdigest()
+
+        cnxn = self.connect()
+        cursor = cnxn.cursor()
+        cursor.execute("SELECT * FROM Users WHERE username = ? AND password_hash = ?", (username, passwordhash))
+        data = cursor.fetchone()
+        cursor.close()
+        cnxn.close()
+        
+        if data is not None:
+            self.switch_to_staff_console(username)
+        else:
+            QMessageBox.critical(self, "Error", "Invalid username or password")
+            return
 
     def no_login(self):
         self.switch_to_seatselector()
@@ -40,12 +57,19 @@ class MainMenuForm(QDialog):
         newwindow.show()
         newwindow.exec_()
         
-    def switch_to_staff_console(self):
+    def switch_to_staff_console(self,UserName):
         self.close()
         from Staff import StaffConsoleForm
-        newwindow = StaffConsoleForm()
+        newwindow = StaffConsoleForm(UserName)
         newwindow.show()
         newwindow.exec_()
+    
+    def connect (self):
+        fileabspath = self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..", "..", "databaselogin.txt")
+        with open(fileabspath, 'r') as f:
+            cs = f.read()
+        cnxn = pyodbc.connect(cs)
+        return cnxn
 
 def main():
     app = QApplication(sys.argv)

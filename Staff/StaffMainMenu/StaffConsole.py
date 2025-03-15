@@ -17,7 +17,7 @@ class Ui_Dialog(object):
         Dialog.resize(1000, 600)
         Dialog.setStyleSheet("background-color: rgb(93, 93, 93);")
         self.Title = QtWidgets.QLabel(Dialog)
-        self.Title.setGeometry(QtCore.QRect(270, 10, 461, 71))
+        self.Title.setGeometry(QtCore.QRect(260, 10, 461, 71))
         font = QtGui.QFont()
         font.setFamily("Open Sans Extrabold")
         font.setPointSize(26)

@@ -172,6 +172,9 @@
       <family>Open Sans Extrabold</family>
      </font>
     </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
+    </property>
    </widget>
   </widget>
   <widget class="QFrame" name="StaffLoginFrame">
@@ -214,7 +217,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="StaffLoginUsernameInput">
+   <widget class="QLineEdit" name="StaffLoginUsername">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -251,7 +254,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="StaffLoginPasswordInput">
+   <widget class="QLineEdit" name="StaffLoginPassword">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -264,6 +267,12 @@
      <font>
       <family>Open Sans Extrabold</family>
      </font>
+    </property>
+    <property name="inputMask">
+     <string/>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
     </property>
    </widget>
   </widget>
