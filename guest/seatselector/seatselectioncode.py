@@ -25,6 +25,7 @@ class SeatSelectionForm(QDialog):
         self.populate_lists()
         self.emptyabspath = os.path.join(os.path.dirname(__file__), "..", "images", "empty.png")
         self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..", "images", "highlighted.png")
+        self.booked_seats = []
     
     def confirm_booking(self):
         if self.ui.listWidget.count() > 0:
@@ -46,6 +47,7 @@ class SeatSelectionForm(QDialog):
             seatlabel.setPixmap(QPixmap(self.highlightedabspath))
             seatdata["status"] = "highlighted"
             self.ui.listWidget.addItem(seatdata["seat_id"])
+            self.booked_seats.append(seatdata["seat_id"])
         elif seatdata["status"] == "highlighted":
             seatlabel.setPixmap(QPixmap(self.emptyabspath))
             seatdata["status"] = "empty"
@@ -54,6 +56,7 @@ class SeatSelectionForm(QDialog):
                 if item.text() == seatdata["seat_id"]:
                     self.ui.listWidget.takeItem(index)
                     break
+            self.booked_seats.remove(seatdata["seat_id"])
         
         
     def populate_lists(self):
@@ -67,7 +70,7 @@ class SeatSelectionForm(QDialog):
     def switch_to_confirm_booking(self):
         self.close()
         from bookingConformation import ConfirmBookingForm
-        newwindow = ConfirmBookingForm()
+        newwindow = ConfirmBookingForm(self.booked_seats)
         newwindow.show()
         newwindow.exec_()
 

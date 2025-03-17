@@ -78,7 +78,7 @@ background-color: rgb(111, 111, 111);</string>
      <property name="font">
       <font>
        <family>Open Sans Extrabold</family>
-       <pointsize>10</pointsize>
+       <pointsize>24</pointsize>
       </font>
      </property>
      <property name="text">

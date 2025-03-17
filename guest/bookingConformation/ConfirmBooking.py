@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\Guest\bookingConformation\ConfirmBooking.ui'
+# Form implementation generated from reading ui file '.\guest\bookingConformation\ConfirmBooking.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -40,7 +40,7 @@ class Ui_Dialog(object):
         self.SeatBookedLabelTemplate.setGeometry(QtCore.QRect(10, 10, 141, 41))
         font = QtGui.QFont()
         font.setFamily("Open Sans Extrabold")
-        font.setPointSize(10)
+        font.setPointSize(24)
         self.SeatBookedLabelTemplate.setFont(font)
         self.SeatBookedLabelTemplate.setObjectName("SeatBookedLabelTemplate")
         self.DropDownTemplate = QtWidgets.QComboBox(self.scrollAreaWidgetContents)

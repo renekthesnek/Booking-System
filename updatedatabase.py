@@ -42,4 +42,3 @@ def add_staff_users():
 def database_setup():
     update_seats()
     add_staff_users()
-

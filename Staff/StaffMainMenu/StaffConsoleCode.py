@@ -25,7 +25,7 @@ class StaffConsoleForm(QDialog):
 
     def switch_to_main_menu(self):
         self.close()
-        from Guest import MainMenuForm
+        from guest import MainMenuForm
         newwindow = MainMenuForm()
         newwindow.show()
         newwindow.exec_()
