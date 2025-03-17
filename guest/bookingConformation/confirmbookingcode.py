@@ -21,9 +21,13 @@ class ConfirmBookingForm(QDialog):
         self.booked_seats = booked_seats
         if len (self.booked_seats) == 1:
             self.ui.SeatBookedLabelTemplate.setText(self.booked_seats[0])
+            self.calculate_seat_price()
+            self.ui.PriceLabelTemplate.setText("£" + str(self.calculate_seat_price()))
         elif len (self.booked_seats) > 1:
             self.ui.SeatBookedLabelTemplate.setText(self.booked_seats[0])
             self.CloneTemplate()
+        
+        #Add updating of price label on new selection from dropdown box
     
     def confirm_booking(self):
         self.switch_to_Booking_Confirmed()
@@ -41,7 +45,12 @@ class ConfirmBookingForm(QDialog):
     def calculate_seat_price(self):
         tickettype = self.ui.DropDownTemplate.currentText()
         if tickettype == "Normal Ticket":
-            
+            ticketprice = 10
+        elif tickettype == "Reduced Price Ticket":
+            ticketprice = 5
+        elif tickettype == "Special Ticket":
+            ticketprice = 0
+        return ticketprice
 
 def main():
     app = QApplication(sys.argv)
