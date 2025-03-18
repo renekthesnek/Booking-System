@@ -1,9 +1,10 @@
 import sys
 import os
+import pyodbc
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from PyQt5.QtWidgets import QApplication, QDialog, QComboBox,QLabel
+from PyQt5.QtWidgets import QApplication, QDialog, QComboBox,QLabel,QMessageBox
 from PyQt5.QtGui import QFont
 
 if __name__ == "__main__":
@@ -14,12 +15,16 @@ else:
 comboboxes = {}
 
 class ConfirmBookingForm(QDialog):
-    def __init__(self, booked_seats):
+    def __init__(self, booked_seats,username="No Parsed Username"):
         super(ConfirmBookingForm, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setWindowTitle("Booking Confirmation")
         self.ui.ConfirmBookingButton.clicked.connect(self.confirm_booking)
+        if username == "No Parsed Username":
+            self.ui.LoginDisplay.setText("Not Logged In")
+        else:
+            self.ui.LoginDisplay.setText("logged in as " + username)
         self.booked_seats = booked_seats
         self.offset = 10
         self.labels = {}
@@ -30,7 +35,7 @@ class ConfirmBookingForm(QDialog):
             comboname = f"Seat{self.booked_seats[0]}ComboBox"
             labelobject = self.labels[labelname]
             comboboxobject = comboboxes[comboname]
-            labelobject.setText("£" + str(self.my_calculate_seat_price(comboboxobject)))
+            labelobject.setText("£" + str(self.calculate_seat_price(comboboxobject)))
             
         elif len (self.booked_seats) > 1:
             for row in range(len(self.booked_seats)):
@@ -39,7 +44,7 @@ class ConfirmBookingForm(QDialog):
                 comboname = f"Seat{self.booked_seats[row]}ComboBox"
                 labelobject = self.labels[labelname]
                 comboboxobject = comboboxes[comboname]
-                labelobject.setText("£" + str(self.my_calculate_seat_price(comboboxobject)))
+                labelobject.setText("£" + str(self.calculate_seat_price(comboboxobject)))
                 if row > 5:
                     self.ui.scrollAreaWidgetContents.resize(self.ui.scrollAreaWidgetContents.width(), self.ui.scrollAreaWidgetContents.height() + 75)
             self.ui.scrollAreaWidgetContents.setMinimumSize(self.ui.scrollAreaWidgetContents.width(), self.ui.scrollAreaWidgetContents.height())
@@ -47,8 +52,15 @@ class ConfirmBookingForm(QDialog):
         self.calculate_total_price()
     
     def confirm_booking(self):
-        self.switch_to_Booking_Confirmed()
-        
+        cnxn = self.connect()
+        cursor = cnxn.cursor()
+        cursor.execute("Select Max(UserID) from Users")
+        MaxID = cursor.fetchone()
+        if self.ui.UsernameInput.text == "" or self.ui.FullNameInput.text == "":
+            QMessageBox.critical(self, "Error", "Please enter a username and full name")
+        elif self.ui.EmailInput.text() == "" and self.ui.PhoneNumberlInput.text == "":
+            QMessageBox.critical(self, "Error", "Please enter Email or phone number")
+            
     def switch_to_Booking_Confirmed(self):
         self.close()
         from ConfirmedBooking import BookingConfirmedForm
@@ -59,7 +71,7 @@ class ConfirmBookingForm(QDialog):
     def calculate_total_price(self):
         self.total_price = 0
         for combobox in comboboxes.values():
-            self.total_price += self.my_calculate_seat_price(combobox)
+            self.total_price += self.calculate_seat_price(combobox)
         self.ui.TotalPriceDisplay.setText("£" + str(self.total_price))
     
     def CloneTemplate(self, currentindex):
@@ -88,7 +100,7 @@ class ConfirmBookingForm(QDialog):
         comboboxes[f"Seat{seatname}ComboBox"] = newcombobox
 
         self.offset += 75
-    def my_calculate_seat_price(self,comboboxobject):
+    def calculate_seat_price(self,comboboxobject):
         tickettype = comboboxobject.currentText()
         if tickettype == "Normal Ticket":
             ticketprice = 10
@@ -96,7 +108,14 @@ class ConfirmBookingForm(QDialog):
             ticketprice = 5
         elif tickettype == "Special Ticket":
             ticketprice = 0
-        return ticketprice
+        return ticketprice#
+    
+    def connect (self):
+        fileabspath = self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..", "..", "databaselogin.txt")
+        with open(fileabspath, 'r') as f:
+            cs = f.read()
+        cnxn = pyodbc.connect(cs)
+        return cnxn
     
 
 class clonedcombo(QComboBox):
@@ -124,7 +143,14 @@ class clonedcombo(QComboBox):
     def calculate_total_price(self):
         self.total_price = 0
         for combobox in comboboxes.values():
-            self.total_price += self.calculate_seat_price()
+            tickettype = combobox.currentText()
+            if tickettype == "Normal Ticket":
+                ticketprice = 10
+            elif tickettype == "Reduced Price Ticket":
+                ticketprice = 5
+            elif tickettype == "Special Ticket":
+                ticketprice = 0
+            self.total_price += ticketprice
         self.ui.TotalPriceDisplay.setText("£" + str(self.total_price))
     
 class clonedlabel(QLabel):

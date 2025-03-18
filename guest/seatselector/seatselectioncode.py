@@ -14,7 +14,7 @@ else:
 
 
 class SeatSelectionForm(QDialog):
-    def __init__(self):
+    def __init__(self,username="No Parsed Username"):
         super().__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
@@ -26,6 +26,7 @@ class SeatSelectionForm(QDialog):
         self.emptyabspath = os.path.join(os.path.dirname(__file__), "..", "images", "empty.png")
         self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..", "images", "highlighted.png")
         self.booked_seats = []
+        self.username = username
     
     def confirm_booking(self):
         if self.ui.listWidget.count() > 0:
@@ -70,7 +71,7 @@ class SeatSelectionForm(QDialog):
     def switch_to_confirm_booking(self):
         self.close()
         from bookingConformation import ConfirmBookingForm
-        newwindow = ConfirmBookingForm(self.booked_seats)
+        newwindow = ConfirmBookingForm(self.booked_seats,self.username)
         newwindow.show()
         newwindow.exec_()
 
