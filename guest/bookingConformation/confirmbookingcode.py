@@ -3,7 +3,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from PyQt5.QtWidgets import QApplication, QDialog
+from PyQt5.QtWidgets import QApplication, QDialog, QComboBox
 
 if __name__ == "__main__":
     from ConfirmBooking import Ui_Dialog
@@ -23,6 +23,7 @@ class ConfirmBookingForm(QDialog):
             self.ui.SeatBookedLabelTemplate.setText(self.booked_seats[0])
             self.calculate_seat_price()
             self.ui.PriceLabelTemplate.setText("£" + str(self.calculate_seat_price()))
+            self.ui.DropDownTemplate.currentTextChanged.connect(lambda: self.ui.PriceLabelTemplate.setText("£" + str(self.calculate_seat_price())))
         elif len (self.booked_seats) > 1:
             self.ui.SeatBookedLabelTemplate.setText(self.booked_seats[0])
             self.CloneTemplate()
@@ -52,6 +53,24 @@ class ConfirmBookingForm(QDialog):
             ticketprice = 0
         return ticketprice
 
+class clonedcombo(QComboBox):
+    def __init__(self, mypricewidget,parent = ...):
+        super().__init__(parent)
+        self.currentTextChanged.connect(self.on_change)
+        self.mypricewidget = mypricewidget
+        
+    def on_change(self):
+        self.mypricewidget.setText("£" + str(self.calculate_seat_price()))
+
+    def calculate_seat_price(self):
+        tickettype = self.ui.DropDownTemplate.currentText()
+        if tickettype == "Normal Ticket":
+            ticketprice = 10
+        elif tickettype == "Reduced Price Ticket":
+            ticketprice = 5
+        elif tickettype == "Special Ticket":
+            ticketprice = 0
+        return ticketprice
 def main():
     app = QApplication(sys.argv)
     window = ConfirmBookingForm(["A1"])
