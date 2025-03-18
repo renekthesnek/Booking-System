@@ -3,7 +3,8 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from PyQt5.QtWidgets import QApplication, QDialog, QComboBox
+from PyQt5.QtWidgets import QApplication, QDialog, QComboBox,QLabel
+from PyQt5.QtGui import QFont
 
 if __name__ == "__main__":
     from ConfirmBooking import Ui_Dialog
@@ -19,14 +20,29 @@ class ConfirmBookingForm(QDialog):
         self.setWindowTitle("Booking Confirmation")
         self.ui.ConfirmBookingButton.clicked.connect(self.confirm_booking)
         self.booked_seats = booked_seats
+        self.offset = 10
+        self.labels = {}
+        self.comboboxes = {}
+        
         if len (self.booked_seats) == 1:
-            self.ui.SeatBookedLabelTemplate.setText(self.booked_seats[0])
-            self.calculate_seat_price()
-            self.ui.PriceLabelTemplate.setText("£" + str(self.calculate_seat_price()))
-            self.ui.DropDownTemplate.currentTextChanged.connect(lambda: self.ui.PriceLabelTemplate.setText("£" + str(self.calculate_seat_price())))
+            self.CloneTemplate(0)
+            labelname = f"Seat{self.booked_seats[0]}PriceLabel"
+            comboname = f"Seat{self.booked_seats[0]}ComboBox"
+            labelobject = self.labels[labelname]
+            comboboxobject = self.comboboxes[comboname]
+            labelobject.setText("£" + str(self.calculate_seat_price(comboboxobject)))
+            
         elif len (self.booked_seats) > 1:
-            self.ui.SeatBookedLabelTemplate.setText(self.booked_seats[0])
-            self.CloneTemplate()
+            for row in range(len(self.booked_seats)):
+                self.CloneTemplate(row)
+                labelname = f"Seat{self.booked_seats[row]}PriceLabel"
+                comboname = f"Seat{self.booked_seats[row]}ComboBox"
+                labelobject = self.labels[labelname]
+                comboboxobject = self.comboboxes[comboname]
+                labelobject.setText("£" + str(self.calculate_seat_price(comboboxobject)))
+                if row > 5:
+                    self.ui.scrollAreaWidgetContents.resize(self.ui.scrollAreaWidgetContents.width(), self.ui.scrollAreaWidgetContents.height() + 75)
+            self.ui.scrollAreaWidgetContents.setMinimumSize(self.ui.scrollAreaWidgetContents.width(), self.ui.scrollAreaWidgetContents.height())
         
         #Add updating of price label on new selection from dropdown box
     
@@ -40,11 +56,34 @@ class ConfirmBookingForm(QDialog):
         newwindow.show()
         newwindow.exec_()
     
-    def CloneTemplate(self):
-        return
+    def CloneTemplate(self, currentindex):
+        seatname = self.booked_seats[currentindex]
 
-    def calculate_seat_price(self):
-        tickettype = self.ui.DropDownTemplate.currentText()
+        newticketlabel = clonedlabel()
+        newticketlabel.setParent(self.ui.scrollAreaWidgetContents)
+        newticketlabel.setGeometry(10,self.offset,141,41)
+        newticketlabel.setFont(QFont('Open Sans Extrabold',24))
+        newticketlabel.setText(self.booked_seats[currentindex])
+        newticketlabel.setObjectName(f"Seat{seatname}Label")
+        self.labels[f"Seat{seatname}Label"] = newticketlabel
+
+        newpricelabel = clonedlabel()
+        newpricelabel.setParent(self.ui.scrollAreaWidgetContents)  # Fix: set parent to self.ui.scrollAreaWidgetContents
+        newpricelabel.setGeometry(340,self.offset,121,41)
+        newpricelabel.setFont(QFont('Open Sans Extrabold',24))
+        newpricelabel.setObjectName(f"Seat{seatname}PriceLabel")
+        self.labels[f"Seat{seatname}PriceLabel"] = newpricelabel
+
+        newcombobox = clonedcombo(newpricelabel)
+        newcombobox.setParent(self.ui.scrollAreaWidgetContents)  # Fix: set parent to self.ui.scrollAreaWidgetContents
+        newcombobox.setGeometry(160,self.offset,171,41)
+        newcombobox.setFont(QFont('Open Sans Extrabold',10))
+        newcombobox.setObjectName(f"Seat{seatname}ComboBox")
+        self.comboboxes[f"Seat{seatname}ComboBox"] = newcombobox
+
+        self.offset += 75
+    def calculate_seat_price(self,comboboxobject):
+        tickettype = comboboxobject.currentText()
         if tickettype == "Normal Ticket":
             ticketprice = 10
         elif tickettype == "Reduced Price Ticket":
@@ -54,16 +93,17 @@ class ConfirmBookingForm(QDialog):
         return ticketprice
 
 class clonedcombo(QComboBox):
-    def __init__(self, mypricewidget,parent = ...):
-        super().__init__(parent)
+    def __init__(self, mypricewidget):
+        super().__init__()
         self.currentTextChanged.connect(self.on_change)
         self.mypricewidget = mypricewidget
+        self.addItems(["Normal Ticket","Reduced Price Ticket","Special Ticket"])
         
     def on_change(self):
         self.mypricewidget.setText("£" + str(self.calculate_seat_price()))
 
     def calculate_seat_price(self):
-        tickettype = self.ui.DropDownTemplate.currentText()
+        tickettype = self.currentText()
         if tickettype == "Normal Ticket":
             ticketprice = 10
         elif tickettype == "Reduced Price Ticket":
@@ -71,6 +111,12 @@ class clonedcombo(QComboBox):
         elif tickettype == "Special Ticket":
             ticketprice = 0
         return ticketprice
+    
+class clonedlabel(QLabel):
+    def __init__(self):
+        super().__init__()
+        
+        
 def main():
     app = QApplication(sys.argv)
     window = ConfirmBookingForm(["A1"])

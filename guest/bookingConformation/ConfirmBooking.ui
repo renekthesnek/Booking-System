@@ -54,6 +54,9 @@ background-color: rgb(111, 111, 111);</string>
    <property name="horizontalScrollBarPolicy">
     <enum>Qt::ScrollBarAsNeeded</enum>
    </property>
+   <property name="sizeAdjustPolicy">
+    <enum>QAbstractScrollArea::AdjustToContents</enum>
+   </property>
    <property name="widgetResizable">
     <bool>true</bool>
    </property>
@@ -66,75 +69,6 @@ background-color: rgb(111, 111, 111);</string>
       <height>423</height>
      </rect>
     </property>
-    <widget class="QLabel" name="SeatBookedLabelTemplate">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>141</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Open Sans Extrabold</family>
-       <pointsize>24</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Seat Placeholder</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="DropDownTemplate">
-     <property name="geometry">
-      <rect>
-       <x>160</x>
-       <y>10</y>
-       <width>171</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Open Sans Extrabold</family>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <item>
-      <property name="text">
-       <string>Normal Ticket</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Reduced Price Ticket</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Special Ticket</string>
-      </property>
-     </item>
-    </widget>
-    <widget class="QLabel" name="PriceLabelTemplate">
-     <property name="geometry">
-      <rect>
-       <x>340</x>
-       <y>10</y>
-       <width>121</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Open Sans Extrabold</family>
-       <pointsize>9</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>price Placeholder</string>
-     </property>
-    </widget>
    </widget>
   </widget>
   <widget class="QPushButton" name="ConfirmBookingButton">

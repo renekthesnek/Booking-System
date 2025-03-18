@@ -30,7 +30,7 @@ class MainMenuForm(QDialog):
     def guest_login(self):
         return
 
-    def staff_login(self):
+    def staff_login(self): 
         username = self.ui.StaffLoginUsername.text()
         password = self.ui.StaffLoginPassword.text()
         passwordhash = hashlib.sha224(password.encode()).hexdigest()
