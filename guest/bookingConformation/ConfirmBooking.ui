@@ -229,6 +229,9 @@ background-color: rgb(111, 111, 111);</string>
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
+    </property>
    </widget>
    <widget class="QLabel" name="ConfirmPasswordLabel">
     <property name="geometry">
@@ -266,6 +269,9 @@ background-color: rgb(111, 111, 111);</string>
       <family>Open Sans Extrabold</family>
       <pointsize>10</pointsize>
      </font>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
     </property>
    </widget>
    <widget class="QLabel" name="EmailLabel">

@@ -1,6 +1,7 @@
 import sys
 import os
 import pyodbc
+import hashlib
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -52,6 +53,7 @@ class ConfirmBookingForm(QDialog):
         self.calculate_total_price()
     
     def confirm_booking(self):
+        #make if for whether user logged in or not
         cnxn = self.connect()
         cursor = cnxn.cursor()
         cursor.execute("Select Max(UserID) from Users")
@@ -60,6 +62,46 @@ class ConfirmBookingForm(QDialog):
             QMessageBox.critical(self, "Error", "Please enter a username and full name")
         elif self.ui.EmailInput.text() == "" and self.ui.PhoneNumberlInput.text == "":
             QMessageBox.critical(self, "Error", "Please enter Email or phone number")
+        elif self.ui.PasswordInput.text() == "":
+            QMessageBox.critical(self, "Error", "Please enter a password")
+        elif self.ui.ConfirmPasswordInput.text() == "":
+            QMessageBox.critical(self, "Error", "Please confirm your password")
+        elif self.ui.PasswordInput.text() != self.ui.ConfirmPasswordInput.text():
+            QMessageBox.critical(self, "Error", "Passwords do not match")
+        else:
+            currentID = MaxID[0] + 1
+            firstname,lastname = self.ui.FullNameInput.text().split(" ")
+            username = self.ui.UsernameInput.text()
+            #add validation for phone number or email here
+            if self.ui.PhoneNumberlInput.text != "":
+                phonenumber = self.ui.PhoneNumberlInput.text()
+                try:
+                    phonenumber = int(phonenumber)
+                except ValueError:
+                    #flags anyway when empty, fix this
+                    QMessageBox.critical(self, "Error", "Please enter a valid phone number")
+            else:
+                phonenumber = None
+            if self.ui.EmailInput.text != "":
+                email = self.ui.EmailInput.text()
+                try:
+                    email = str(email)
+                except ValueError:
+                    QMessageBox.critical(self, "Error", "Please enter a valid email")
+            else:
+                email = None
+            passwordhash = hashlib.sha224(self.ui.PasswordInput.text().encode()).hexdigest()
+            permission = "Guest"
+            cursor.execute("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?)", (currentID,username,passwordhash,email,phonenumber,firstname,lastname,permission))
+            rows_affected = cursor.rowcount
+            if rows_affected > 0:
+                QMessageBox.information(self, "Success", "Booking Confirmed")
+                cnxn.commit()
+                cnxn.close()
+            else:
+                QMessageBox.critical(self, "Error", "An error has occured during insertion")
+                cnxn.close
+            self.switch_to_Booking_Confirmed()
             
     def switch_to_Booking_Confirmed(self):
         self.close()
