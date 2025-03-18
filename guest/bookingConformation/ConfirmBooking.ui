@@ -344,6 +344,50 @@ background-color: rgb(111, 111, 111);</string>
      </font>
     </property>
    </widget>
+   <widget class="QLabel" name="TotalPriceLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>220</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans Extrabold</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
+    <property name="text">
+     <string>Total Price:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="TotalPriceDisplay">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>220</y>
+      <width>291</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QLabel" name="LoginDisplay">
    <property name="geometry">

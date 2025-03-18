@@ -11,6 +11,7 @@ if __name__ == "__main__":
 else:
     from .ConfirmBooking import Ui_Dialog
     
+comboboxes = {}
 
 class ConfirmBookingForm(QDialog):
     def __init__(self, booked_seats):
@@ -22,15 +23,14 @@ class ConfirmBookingForm(QDialog):
         self.booked_seats = booked_seats
         self.offset = 10
         self.labels = {}
-        self.comboboxes = {}
         
         if len (self.booked_seats) == 1:
             self.CloneTemplate(0)
             labelname = f"Seat{self.booked_seats[0]}PriceLabel"
             comboname = f"Seat{self.booked_seats[0]}ComboBox"
             labelobject = self.labels[labelname]
-            comboboxobject = self.comboboxes[comboname]
-            labelobject.setText("£" + str(self.calculate_seat_price(comboboxobject)))
+            comboboxobject = comboboxes[comboname]
+            labelobject.setText("£" + str(self.my_calculate_seat_price(comboboxobject)))
             
         elif len (self.booked_seats) > 1:
             for row in range(len(self.booked_seats)):
@@ -38,13 +38,13 @@ class ConfirmBookingForm(QDialog):
                 labelname = f"Seat{self.booked_seats[row]}PriceLabel"
                 comboname = f"Seat{self.booked_seats[row]}ComboBox"
                 labelobject = self.labels[labelname]
-                comboboxobject = self.comboboxes[comboname]
-                labelobject.setText("£" + str(self.calculate_seat_price(comboboxobject)))
+                comboboxobject = comboboxes[comboname]
+                labelobject.setText("£" + str(self.my_calculate_seat_price(comboboxobject)))
                 if row > 5:
                     self.ui.scrollAreaWidgetContents.resize(self.ui.scrollAreaWidgetContents.width(), self.ui.scrollAreaWidgetContents.height() + 75)
             self.ui.scrollAreaWidgetContents.setMinimumSize(self.ui.scrollAreaWidgetContents.width(), self.ui.scrollAreaWidgetContents.height())
-        
-        #Add updating of price label on new selection from dropdown box
+            
+        self.calculate_total_price()
     
     def confirm_booking(self):
         self.switch_to_Booking_Confirmed()
@@ -55,6 +55,12 @@ class ConfirmBookingForm(QDialog):
         newwindow = BookingConfirmedForm()
         newwindow.show()
         newwindow.exec_()
+    
+    def calculate_total_price(self):
+        self.total_price = 0
+        for combobox in comboboxes.values():
+            self.total_price += self.my_calculate_seat_price(combobox)
+        self.ui.TotalPriceDisplay.setText("£" + str(self.total_price))
     
     def CloneTemplate(self, currentindex):
         seatname = self.booked_seats[currentindex]
@@ -74,15 +80,15 @@ class ConfirmBookingForm(QDialog):
         newpricelabel.setObjectName(f"Seat{seatname}PriceLabel")
         self.labels[f"Seat{seatname}PriceLabel"] = newpricelabel
 
-        newcombobox = clonedcombo(newpricelabel)
+        newcombobox = clonedcombo(newpricelabel,self.ui)
         newcombobox.setParent(self.ui.scrollAreaWidgetContents)  # Fix: set parent to self.ui.scrollAreaWidgetContents
         newcombobox.setGeometry(160,self.offset,171,41)
         newcombobox.setFont(QFont('Open Sans Extrabold',10))
         newcombobox.setObjectName(f"Seat{seatname}ComboBox")
-        self.comboboxes[f"Seat{seatname}ComboBox"] = newcombobox
+        comboboxes[f"Seat{seatname}ComboBox"] = newcombobox
 
         self.offset += 75
-    def calculate_seat_price(self,comboboxobject):
+    def my_calculate_seat_price(self,comboboxobject):
         tickettype = comboboxobject.currentText()
         if tickettype == "Normal Ticket":
             ticketprice = 10
@@ -91,16 +97,19 @@ class ConfirmBookingForm(QDialog):
         elif tickettype == "Special Ticket":
             ticketprice = 0
         return ticketprice
+    
 
 class clonedcombo(QComboBox):
-    def __init__(self, mypricewidget):
+    def __init__(self, mypricewidget,ui):
         super().__init__()
+        self.ui = ui
         self.currentTextChanged.connect(self.on_change)
         self.mypricewidget = mypricewidget
         self.addItems(["Normal Ticket","Reduced Price Ticket","Special Ticket"])
         
     def on_change(self):
         self.mypricewidget.setText("£" + str(self.calculate_seat_price()))
+        self.calculate_total_price()
 
     def calculate_seat_price(self):
         tickettype = self.currentText()
@@ -111,6 +120,12 @@ class clonedcombo(QComboBox):
         elif tickettype == "Special Ticket":
             ticketprice = 0
         return ticketprice
+    
+    def calculate_total_price(self):
+        self.total_price = 0
+        for combobox in comboboxes.values():
+            self.total_price += self.calculate_seat_price()
+        self.ui.TotalPriceDisplay.setText("£" + str(self.total_price))
     
 class clonedlabel(QLabel):
     def __init__(self):
