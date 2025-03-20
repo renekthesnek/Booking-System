@@ -34,16 +34,18 @@ class SeatEditorForm(QDialog):
         for seatdata in self.seats:
             seatlabel = seatdata["label_object"]
             if seatlabel.underMouse():
+                #add highlighting of seats and bind to comboboxes to make seats red when blocked
                 if seatdata["status"] == "empty":
                     self.addnewclone(seatdata)
                     self.widgets += 1
                     self.ui.scrollAreaWidgetContents.update()
-                    seatdata["status"] == 'highlighted'
+                    seatdata["status"] = 'highlighted'
+                    print(seatdata["status"])
                 elif seatdata["status"] == "highlighted":
-                    #self.removeclone(seatdata)
+                    self.removeclone(seatdata)
                     self.widgets -= 1
                     self.ui.scrollAreaWidgetContents.update()
-                    seatdata["status"] == 'empty'
+                    seatdata["status"] = 'empty'
         else:
             super().mousePressEvent(event)
             
@@ -76,6 +78,17 @@ class SeatEditorForm(QDialog):
             self.ui.scrollAreaWidgetContents.setFixedSize(self.ui.scrollAreaWidgetContents.width(), self.ui.scrollAreaWidgetContents.height() + 75)
         
         self.offset += 75
+    
+    def removeclone(self,seatdata):
+        #delete data from dictionary
+        seatname = seatdata["seat_id"]
+        self.labels[f"Seat{seatname}Label"].parent().setVisible(False)
+        self.labels[f"Seat{seatname}Label"].setVisible(False)
+        self.labels[f"Seat{seatname}Label"].deletelater()
+        self.comboboxes[f"Seat{seatname}ComboBox"].parent().setVisible(False)
+        self.comboboxes[f"Seat{seatname}ComboBox"].setVisible(False)
+        self.comboboxes[f"Seat{seatname}ComboBox"].deletelater()
+        self.offset -= 75
         
 
     def populate_lists(self):
