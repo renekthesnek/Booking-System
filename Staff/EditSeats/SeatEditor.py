@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\Staff\EditSeats\SeatEditor.ui'
+# Form implementation generated from reading ui file '.\Booking-System\Staff\EditSeats\SeatEditor.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -2585,7 +2585,7 @@ class Ui_Dialog(object):
         self.loggedindisplay.setStyleSheet("color: rgb(238, 238, 238);")
         self.loggedindisplay.setObjectName("loggedindisplay")
         self.scrollArea = QtWidgets.QScrollArea(Dialog)
-        self.scrollArea.setGeometry(QtCore.QRect(710, 150, 281, 441))
+        self.scrollArea.setGeometry(QtCore.QRect(710, 150, 281, 391))
         self.scrollArea.setStyleSheet("color: rgb(238, 238, 238);\n"
 "background-color: rgb(111, 111, 111);")
         self.scrollArea.setFrameShape(QtWidgets.QFrame.Panel)
@@ -2594,7 +2594,7 @@ class Ui_Dialog(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 277, 437))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 277, 387))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.scrollAreaWidgetContents.setFont(font)
@@ -2624,6 +2624,14 @@ class Ui_Dialog(object):
         self.EditSeatsForPeformaceLabel.setMidLineWidth(0)
         self.EditSeatsForPeformaceLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.EditSeatsForPeformaceLabel.setObjectName("EditSeatsForPeformaceLabel")
+        self.Backtostaffconsolebutton = QtWidgets.QPushButton(Dialog)
+        self.Backtostaffconsolebutton.setGeometry(QtCore.QRect(740, 550, 231, 41))
+        font = QtGui.QFont()
+        font.setFamily("Open Sans Extrabold")
+        font.setPointSize(14)
+        self.Backtostaffconsolebutton.setFont(font)
+        self.Backtostaffconsolebutton.setStyleSheet("color: rgb(238, 238, 238);")
+        self.Backtostaffconsolebutton.setObjectName("Backtostaffconsolebutton")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -2633,4 +2641,6 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.loggedindisplay.setText(_translate("Dialog", "logged in as:"))
         self.TitleLabel.setText(_translate("Dialog", "Title:"))
+        self.stagegraphic.setText(_translate("Dialog", "STAGE"))
         self.EditSeatsForPeformaceLabel.setText(_translate("Dialog", "Edit seats for peformance"))
+        self.Backtostaffconsolebutton.setText(_translate("Dialog", "Back to staff console"))

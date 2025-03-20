@@ -153,6 +153,9 @@ background-color: rgb(111, 111, 111);</string>
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
    </widget>
    <widget class="QLabel" name="FullNameLabel">
     <property name="geometry">
@@ -191,6 +194,9 @@ background-color: rgb(111, 111, 111);</string>
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
    </widget>
    <widget class="QLabel" name="PasswordLabel">
     <property name="geometry">
@@ -228,6 +234,9 @@ background-color: rgb(111, 111, 111);</string>
       <family>Open Sans Extrabold</family>
       <pointsize>10</pointsize>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
     </property>
     <property name="echoMode">
      <enum>QLineEdit::Password</enum>
@@ -270,6 +279,9 @@ background-color: rgb(111, 111, 111);</string>
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
     <property name="echoMode">
      <enum>QLineEdit::Password</enum>
     </property>
@@ -311,6 +323,9 @@ background-color: rgb(111, 111, 111);</string>
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
    </widget>
    <widget class="QLabel" name="PhoneNumberLabel">
     <property name="geometry">
@@ -348,6 +363,9 @@ background-color: rgb(111, 111, 111);</string>
       <family>Open Sans Extrabold</family>
       <pointsize>10</pointsize>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
     </property>
    </widget>
    <widget class="QLabel" name="TotalPriceLabel">

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\Staff\StaffMainMenu\StaffConsole.ui'
+# Form implementation generated from reading ui file '.\Booking-System\Staff\StaffMainMenu\StaffConsole.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -37,7 +37,7 @@ class Ui_Dialog(object):
         self.ToPeformanceMenuButton.setGeometry(QtCore.QRect(150, 220, 291, 51))
         font = QtGui.QFont()
         font.setFamily("Open Sans Extrabold")
-        font.setPointSize(18)
+        font.setPointSize(16)
         self.ToPeformanceMenuButton.setFont(font)
         self.ToPeformanceMenuButton.setStyleSheet("color: rgb(238, 238, 238);")
         self.ToPeformanceMenuButton.setObjectName("ToPeformanceMenuButton")
@@ -45,7 +45,7 @@ class Ui_Dialog(object):
         self.EditSeatsForPeformanceButton.setGeometry(QtCore.QRect(530, 220, 291, 51))
         font = QtGui.QFont()
         font.setFamily("Open Sans Extrabold")
-        font.setPointSize(18)
+        font.setPointSize(16)
         self.EditSeatsForPeformanceButton.setFont(font)
         self.EditSeatsForPeformanceButton.setStyleSheet("color: rgb(238, 238, 238);")
         self.EditSeatsForPeformanceButton.setObjectName("EditSeatsForPeformanceButton")

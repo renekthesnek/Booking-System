@@ -21,6 +21,7 @@ class StaffConsoleForm(QDialog):
         self.setWindowTitle("Booking Confirmation")
         self.ui.BackToMenuButton.clicked.connect(self.switch_to_main_menu)
         self.ui.ToPeformanceMenuButton.clicked.connect(self.switch_to_CreateEditConsole)
+        self.ui.EditSeatsForPeformanceButton.clicked.connect(self.switch_to_seat_editor)
         self.ui.loggedindisplay.setText("Logged in as: " + UserName)
 
     def switch_to_main_menu(self):
@@ -34,6 +35,13 @@ class StaffConsoleForm(QDialog):
         self.close()
         from CreateEdit import CreateEditConsoleForm
         newwindow = CreateEditConsoleForm()
+        newwindow.show()
+        newwindow.exec_()
+    
+    def switch_to_seat_editor(self):
+        self.close()
+        from EditSeats import SeatEditorForm
+        newwindow = SeatEditorForm()
         newwindow.show()
         newwindow.exec_()
 def main():

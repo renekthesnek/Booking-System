@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\guest\bookingConformation\ConfirmBooking.ui'
+# Form implementation generated from reading ui file '.\Booking-System\guest\bookingConformation\ConfirmBooking.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -69,6 +69,7 @@ class Ui_Dialog(object):
         font.setFamily("Open Sans Extrabold")
         font.setPointSize(10)
         self.UsernameInput.setFont(font)
+        self.UsernameInput.setStyleSheet("color: rgb(238, 238, 238);")
         self.UsernameInput.setObjectName("UsernameInput")
         self.FullNameLabel = QtWidgets.QLabel(self.CustomerDetailsFrame)
         self.FullNameLabel.setGeometry(QtCore.QRect(10, 80, 91, 31))
@@ -84,6 +85,7 @@ class Ui_Dialog(object):
         font.setFamily("Open Sans Extrabold")
         font.setPointSize(10)
         self.FullNameInput.setFont(font)
+        self.FullNameInput.setStyleSheet("color: rgb(238, 238, 238);")
         self.FullNameInput.setObjectName("FullNameInput")
         self.PasswordLabel = QtWidgets.QLabel(self.CustomerDetailsFrame)
         self.PasswordLabel.setGeometry(QtCore.QRect(10, 260, 91, 31))
@@ -99,6 +101,7 @@ class Ui_Dialog(object):
         font.setFamily("Open Sans Extrabold")
         font.setPointSize(10)
         self.PasswordInput.setFont(font)
+        self.PasswordInput.setStyleSheet("color: rgb(238, 238, 238);")
         self.PasswordInput.setEchoMode(QtWidgets.QLineEdit.Password)
         self.PasswordInput.setObjectName("PasswordInput")
         self.ConfirmPasswordLabel = QtWidgets.QLabel(self.CustomerDetailsFrame)
@@ -115,6 +118,7 @@ class Ui_Dialog(object):
         font.setFamily("Open Sans Extrabold")
         font.setPointSize(10)
         self.ConfirmPasswordInput.setFont(font)
+        self.ConfirmPasswordInput.setStyleSheet("color: rgb(238, 238, 238);")
         self.ConfirmPasswordInput.setEchoMode(QtWidgets.QLineEdit.Password)
         self.ConfirmPasswordInput.setObjectName("ConfirmPasswordInput")
         self.EmailLabel = QtWidgets.QLabel(self.CustomerDetailsFrame)
@@ -131,6 +135,7 @@ class Ui_Dialog(object):
         font.setFamily("Open Sans Extrabold")
         font.setPointSize(10)
         self.EmailInput.setFont(font)
+        self.EmailInput.setStyleSheet("color: rgb(238, 238, 238);")
         self.EmailInput.setObjectName("EmailInput")
         self.PhoneNumberLabel = QtWidgets.QLabel(self.CustomerDetailsFrame)
         self.PhoneNumberLabel.setGeometry(QtCore.QRect(10, 180, 111, 31))
@@ -146,6 +151,7 @@ class Ui_Dialog(object):
         font.setFamily("Open Sans Extrabold")
         font.setPointSize(10)
         self.PhoneNumberlInput.setFont(font)
+        self.PhoneNumberlInput.setStyleSheet("color: rgb(238, 238, 238);")
         self.PhoneNumberlInput.setObjectName("PhoneNumberlInput")
         self.TotalPriceLabel = QtWidgets.QLabel(self.CustomerDetailsFrame)
         self.TotalPriceLabel.setGeometry(QtCore.QRect(10, 220, 81, 31))

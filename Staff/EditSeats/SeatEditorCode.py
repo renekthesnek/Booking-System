@@ -6,7 +6,7 @@ from datetime import date
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from PyQt5.QtWidgets import QApplication, QDialog,QMessageBox,QLabel,QComboBox
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QPixmap
 
 
 if __name__ == "__main__":
@@ -20,6 +20,7 @@ class SeatEditorForm(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setWindowTitle("Booking Confirmation")
+        self.ui.Backtostaffconsolebutton.clicked.connect(self.switch_to_Staff_console)
         self.seats = []
         self.labels = {}
         self.comboboxes = {}
@@ -28,6 +29,10 @@ class SeatEditorForm(QDialog):
         self.widgets = 0
         self.ui.scrollAreaWidgetContents.adjustSize()
         self.ui.scrollArea.setWidgetResizable(True)
+        self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..",'..','guest', "images", "highlighted.png")
+        self.emptyabspath = os.path.join(os.path.dirname(__file__), "..",'..','guest', "images", "empty.png")
+        self.getpeformancedata()
+        self.getseatstates()
         
     
     def mousePressEvent(self, event):
@@ -40,12 +45,13 @@ class SeatEditorForm(QDialog):
                     self.widgets += 1
                     self.ui.scrollAreaWidgetContents.update()
                     seatdata["status"] = 'highlighted'
-                    print(seatdata["status"])
+                    seatlabel.setPixmap(QPixmap(self.highlightedabspath))
                 elif seatdata["status"] == "highlighted":
                     self.removeclone(seatdata)
                     self.widgets -= 1
                     self.ui.scrollAreaWidgetContents.update()
                     seatdata["status"] = 'empty'
+                    seatlabel.setPixmap(QPixmap(self.emptyabspath))
         else:
             super().mousePressEvent(event)
             
@@ -80,14 +86,15 @@ class SeatEditorForm(QDialog):
         self.offset += 75
     
     def removeclone(self,seatdata):
-        #delete data from dictionary
         seatname = seatdata["seat_id"]
         self.labels[f"Seat{seatname}Label"].parent().setVisible(False)
         self.labels[f"Seat{seatname}Label"].setVisible(False)
-        self.labels[f"Seat{seatname}Label"].deletelater()
+        self.labels[f"Seat{seatname}Label"].deleteLater()
+        del self.labels[f"Seat{seatname}Label"]
         self.comboboxes[f"Seat{seatname}ComboBox"].parent().setVisible(False)
         self.comboboxes[f"Seat{seatname}ComboBox"].setVisible(False)
-        self.comboboxes[f"Seat{seatname}ComboBox"].deletelater()
+        self.comboboxes[f"Seat{seatname}ComboBox"].deleteLater()
+        del self.comboboxes[f"Seat{seatname}ComboBox"]
         self.offset -= 75
         
 
@@ -95,7 +102,34 @@ class SeatEditorForm(QDialog):
         for i in (["A","B","C","D","E","F","G","H","I","J"]):
             for j in range(20):
                 self.seats.append({"label_object":self.ui.__getattribute__("seat"+i+"_"+str(j+1)),"seat_id":i+str(j+1),"status":"empty"})
-                
+    
+    def switch_to_Staff_console(self):
+        self.close()
+        from StaffMainMenu import StaffConsoleForm
+        newwindow = StaffConsoleForm()
+        newwindow.show()
+        newwindow.exec_()
+    
+    def connect(self):
+        fileabspath = os.path.join(os.path.dirname(__file__), "..", "..", "databaselogin.txt")
+        with open(fileabspath, 'r') as f:
+            cs = f.read()
+        cnxn = pyodbc.connect(cs)
+        return cnxn
+    
+    def getpeformancedata(self):
+        cnxn = self.connect()
+        cursor = cnxn.cursor()
+        cursor.execute("SELECT title FROM Performances")
+        data = cursor.fetchall()
+        self.ui.comboBox.addItems([i[0] for i in data])
+    
+    def getseatstates(self):
+        cnxn = self.connect()
+        cursor = cnxn.cursor()
+        cursor.execute("SELECT * FROM SeatStatus,Performances WHERE SeatStatus.performance_id = Performances.performance_id AND Performances.title = ?", (self.ui.comboBox.currentText(),))
+        data = cursor.fetchall()
+        
 class clonedlabel(QLabel):
     def __init__(self):
         super().__init__()

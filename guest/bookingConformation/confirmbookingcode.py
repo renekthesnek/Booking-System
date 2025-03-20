@@ -68,6 +68,8 @@ class ConfirmBookingForm(QDialog):
             QMessageBox.critical(self, "Error", "Please confirm your password")
         elif self.ui.PasswordInput.text() != self.ui.ConfirmPasswordInput.text():
             QMessageBox.critical(self, "Error", "Passwords do not match")
+        elif len(self.ui.FullNameInput.text().strip().split(" ")) != 2:
+            QMessageBox.critical(self, "Error", "Please enter a first and last name")
         else:
             currentID = MaxID[0] + 1
             firstname,lastname = self.ui.FullNameInput.text().split(" ")
@@ -78,8 +80,7 @@ class ConfirmBookingForm(QDialog):
                 try:
                     phonenumber = int(phonenumber)
                 except ValueError:
-                    #flags anyway when empty, fix this
-                    QMessageBox.critical(self, "Error", "Please enter a valid phone number")
+                    phonenumber = None
             else:
                 phonenumber = None
             if self.ui.EmailInput.text != "":
@@ -87,7 +88,7 @@ class ConfirmBookingForm(QDialog):
                 try:
                     email = str(email)
                 except ValueError:
-                    QMessageBox.critical(self, "Error", "Please enter a valid email")
+                    phonenumber = None
             else:
                 email = None
             passwordhash = hashlib.sha224(self.ui.PasswordInput.text().encode()).hexdigest()
@@ -153,7 +154,7 @@ class ConfirmBookingForm(QDialog):
             ticketprice = 5
         elif tickettype == "Special Ticket":
             ticketprice = 0
-        return ticketprice#
+        return ticketprice
     
     def connect (self):
         fileabspath = self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..", "..", "databaselogin.txt")

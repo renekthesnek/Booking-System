@@ -43,7 +43,7 @@
      <x>710</x>
      <y>150</y>
      <width>281</width>
-     <height>441</height>
+     <height>391</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -68,7 +68,7 @@ background-color: rgb(111, 111, 111);</string>
       <x>0</x>
       <y>0</y>
       <width>277</width>
-      <height>437</height>
+      <height>387</height>
      </rect>
     </property>
     <property name="font">
@@ -149,6 +149,50 @@ background-color: rgb(111, 111, 111);</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Backtostaffconsolebutton">
+   <property name="geometry">
+    <rect>
+     <x>830</x>
+     <y>550</y>
+     <width>161</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans Extrabold</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 238);</string>
+   </property>
+   <property name="text">
+    <string>Back to staff console</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ConfirmButton">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>550</y>
+     <width>111</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans Extrabold</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 238);</string>
+   </property>
+   <property name="text">
+    <string>Confirm</string>
    </property>
   </widget>
  </widget>
