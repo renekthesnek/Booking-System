@@ -125,20 +125,23 @@ class ConfirmBookingForm(QDialog):
         newticketlabel.setFont(QFont('Open Sans Extrabold',24))
         newticketlabel.setText(self.booked_seats[currentindex])
         newticketlabel.setObjectName(f"Seat{seatname}Label")
+        newticketlabel.setStyleSheet("color: rgb(238, 238, 238);")
         self.labels[f"Seat{seatname}Label"] = newticketlabel
 
         newpricelabel = clonedlabel()
-        newpricelabel.setParent(self.ui.scrollAreaWidgetContents)  # Fix: set parent to self.ui.scrollAreaWidgetContents
+        newpricelabel.setParent(self.ui.scrollAreaWidgetContents)  
         newpricelabel.setGeometry(340,self.offset,121,41)
         newpricelabel.setFont(QFont('Open Sans Extrabold',24))
         newpricelabel.setObjectName(f"Seat{seatname}PriceLabel")
+        newpricelabel.setStyleSheet("color: rgb(238, 238, 238);")
         self.labels[f"Seat{seatname}PriceLabel"] = newpricelabel
 
         newcombobox = clonedcombo(newpricelabel,self.ui)
-        newcombobox.setParent(self.ui.scrollAreaWidgetContents)  # Fix: set parent to self.ui.scrollAreaWidgetContents
+        newcombobox.setParent(self.ui.scrollAreaWidgetContents) 
         newcombobox.setGeometry(160,self.offset,171,41)
         newcombobox.setFont(QFont('Open Sans Extrabold',10))
         newcombobox.setObjectName(f"Seat{seatname}ComboBox")
+        newcombobox.setStyleSheet("color: rgb(238, 238, 238);")
         comboboxes[f"Seat{seatname}ComboBox"] = newcombobox
 
         self.offset += 75

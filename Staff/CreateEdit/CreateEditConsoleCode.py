@@ -20,11 +20,17 @@ class CreateEditConsoleForm(QDialog):
         super(CreateEditConsoleForm, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        self.setWindowTitle("Booking Confirmation")
+        self.setWindowTitle("Add Peformance")
         self.ui.BackToMenuButton.clicked.connect(self.switch_to_Staff_console)
         self.ui.AddPeformanceButton.clicked.connect(self.addPeformance)
         self.ui.loggedindisplay.setText("Logged in as: " + UserName)
         self.ui.AddPeformanceDateEdit.setDate(date.today())
+        self.ui.comboBox.currentIndexChanged.connect(self.updatedisplays)
+        try:
+            self.updatedisplays()
+        except:
+            print("Peformance Data Not Found")
+            self.ui.AddPeformanceIDDisplay.setText("1")
 
     def switch_to_Staff_console(self):
         self.close()
@@ -34,7 +40,7 @@ class CreateEditConsoleForm(QDialog):
         newwindow.exec_()
     
     def addPeformance(self):
-        PeformanceID = self.ui.AddPeformanceIDInput.text()
+        PeformanceID = self.ui.AddPeformanceIDDisplay.text()
         PeformanceDate = self.ui.AddPeformanceDateEdit.text()
         PeformanceTitle = self.ui.AddPeformanceTitleInput.text()
         PeformanceDate = PeformanceDate.replace("/","-")
@@ -55,8 +61,8 @@ class CreateEditConsoleForm(QDialog):
                     if rows_affected > 0:
                         cnxn.commit()
                         QMessageBox.information(self, "Success", "Peformance has been added")
-                        self.ui.AddPeformanceIDInput.clear()
                         self.ui.AddPeformanceTitleInput.clear()
+                        self.updatedisplays()
                     else:
                         QMessageBox.critical(self, "Error", "An error has occured while trying to add the peformance\nError Creating Seats")
                 
@@ -73,6 +79,26 @@ class CreateEditConsoleForm(QDialog):
             cs = f.read()
         cnxn = pyodbc.connect(cs)
         return cnxn
+    
+    def updatedisplays(self):
+        cnxn = self.connect()
+        cursor = cnxn.cursor()
+        cursor.execute("SELECT Max(performance_id) FROM Performances")
+        MaxID = cursor.fetchone()
+        self.ui.AddPeformanceIDDisplay.setText(str(MaxID[0]+1))
+        
+        self.ui.comboBox.blockSignals(True)
+        self.ui.comboBox.clear()
+        cursor.execute("Select title from Performances")
+        data = cursor.fetchall()
+        self.ui.comboBox.addItems([i[0] for i in data])
+        self.ui.comboBox.blockSignals(False)
+
+        cursor.execute("select * from Performances where title = ?", (self.ui.comboBox.currentText(),))
+        data = cursor.fetchone()
+        self.ui.EditPeformanceIDInput.setText(str(data[0]))
+        self.ui.EditPerformanceDateEdit.setDate(date.fromisoformat(data[1]))
+        self.ui.EditPeformanceTitleInput.setText(str(data[2]))
 def main():
     app = QApplication(sys.argv)
     window = CreateEditConsoleForm()

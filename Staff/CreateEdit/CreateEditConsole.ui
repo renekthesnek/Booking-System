@@ -104,21 +104,6 @@
      <string>PeformanceID:</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="AddPeformanceIDInput">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>40</y>
-      <width>201</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-   </widget>
    <widget class="QLabel" name="AddPeformanceDateLabel">
     <property name="geometry">
      <rect>
@@ -214,6 +199,33 @@
      <string>Add Peformance</string>
     </property>
    </widget>
+   <widget class="QLabel" name="AddPeformanceIDDisplay">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>40</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QPushButton" name="BackToMenuButton">
    <property name="geometry">
@@ -245,6 +257,9 @@
      <width>431</width>
      <height>351</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 238);</string>
    </property>
    <property name="frameShape">
     <enum>QFrame::Panel</enum>
