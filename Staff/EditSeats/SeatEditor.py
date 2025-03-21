@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\Booking-System\Staff\EditSeats\SeatEditor.ui'
+# Form implementation generated from reading ui file '.\Staff\EditSeats\SeatEditor.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -2625,13 +2625,21 @@ class Ui_Dialog(object):
         self.EditSeatsForPeformaceLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.EditSeatsForPeformaceLabel.setObjectName("EditSeatsForPeformaceLabel")
         self.Backtostaffconsolebutton = QtWidgets.QPushButton(Dialog)
-        self.Backtostaffconsolebutton.setGeometry(QtCore.QRect(740, 550, 231, 41))
+        self.Backtostaffconsolebutton.setGeometry(QtCore.QRect(830, 550, 161, 41))
         font = QtGui.QFont()
         font.setFamily("Open Sans Extrabold")
-        font.setPointSize(14)
+        font.setPointSize(10)
         self.Backtostaffconsolebutton.setFont(font)
         self.Backtostaffconsolebutton.setStyleSheet("color: rgb(238, 238, 238);")
         self.Backtostaffconsolebutton.setObjectName("Backtostaffconsolebutton")
+        self.ConfirmButton = QtWidgets.QPushButton(Dialog)
+        self.ConfirmButton.setGeometry(QtCore.QRect(710, 550, 111, 41))
+        font = QtGui.QFont()
+        font.setFamily("Open Sans Extrabold")
+        font.setPointSize(10)
+        self.ConfirmButton.setFont(font)
+        self.ConfirmButton.setStyleSheet("color: rgb(238, 238, 238);")
+        self.ConfirmButton.setObjectName("ConfirmButton")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -2644,3 +2652,4 @@ class Ui_Dialog(object):
         self.stagegraphic.setText(_translate("Dialog", "STAGE"))
         self.EditSeatsForPeformaceLabel.setText(_translate("Dialog", "Edit seats for peformance"))
         self.Backtostaffconsolebutton.setText(_translate("Dialog", "Back to staff console"))
+        self.ConfirmButton.setText(_translate("Dialog", "Confirm"))

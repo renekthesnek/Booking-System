@@ -89,12 +89,12 @@ class CreateEditConsoleForm(QDialog):
         
         self.ui.comboBox.blockSignals(True)
         self.ui.comboBox.clear()
-        cursor.execute("Select title from Performances")
+        cursor.execute("Select Performance_title from Performances")
         data = cursor.fetchall()
         self.ui.comboBox.addItems([i[0] for i in data])
         self.ui.comboBox.blockSignals(False)
 
-        cursor.execute("select * from Performances where title = ?", (self.ui.comboBox.currentText(),))
+        cursor.execute("select * from Performances where Performance_title = ?", (self.ui.comboBox.currentText(),))
         data = cursor.fetchone()
         self.ui.EditPeformanceIDInput.setText(str(data[0]))
         self.ui.EditPerformanceDateEdit.setDate(date.fromisoformat(data[1]))

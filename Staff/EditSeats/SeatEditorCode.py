@@ -67,7 +67,7 @@ class SeatEditorForm(QDialog):
         newticketlabel.setStyleSheet("color: rgb(238, 238, 238);")
         self.labels[f"Seat{seatname}Label"] = newticketlabel
         
-        newcombobox = clonedcombo()
+        newcombobox = clonedcombo(newticketlabel,self.ui)
         newcombobox.setParent(self.ui.scrollAreaWidgetContents)
         newcombobox.setGeometry(100,self.offset,121,41)
         newcombobox.setFont(QFont('Open Sans Extrabold',10))
@@ -120,24 +120,44 @@ class SeatEditorForm(QDialog):
     def getpeformancedata(self):
         cnxn = self.connect()
         cursor = cnxn.cursor()
-        cursor.execute("SELECT title FROM Performances")
+        cursor.execute("SELECT Performance_title FROM Performances")
         data = cursor.fetchall()
         self.ui.comboBox.addItems([i[0] for i in data])
     
     def getseatstates(self):
         cnxn = self.connect()
         cursor = cnxn.cursor()
-        cursor.execute("SELECT * FROM SeatStatus,Performances WHERE SeatStatus.performance_id = Performances.performance_id AND Performances.title = ?", (self.ui.comboBox.currentText(),))
+        cursor.execute("SELECT * FROM SeatStatus WHERE performance_id = (select performance_id from Performances where Performance_title = ?)", (self.ui.comboBox.currentText(),))
         data = cursor.fetchall()
+        for seatstate in data:
+            for seat in self.seats:
+                if seat["seat_id"] == seatstate[2]:
+                    seat["status"] = seatstate[3]
+                    break
+            
+            
         
 class clonedlabel(QLabel):
     def __init__(self):
         super().__init__()
         
 class clonedcombo(QComboBox):
-    def __init__(self):
+    def __init__(self,myticketlabel,ui):
         super().__init__()
-        
+        self.addItems(["Available","Unavailable"])
+        self.currentTextChanged.connect(self.on_change)
+        self.myticketlabel = myticketlabel
+        self.ui = ui
+    
+    def on_change(self):
+        seat = self.myticketlabel.text()
+        seat = seat[0]+"_"+seat[1]+seat[2]
+        if self.currentText() == "Available":
+            self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..",'..','guest', "images", "highlighted.png")
+            self.ui.__getattribute__("seat"+seat).setPixmap(QPixmap(self.highlightedabspath))
+        else:
+            self.blockedabspath = os.path.join(os.path.dirname(__file__), "..",'..','guest', "images", "blocked.png")
+            self.ui.__getattribute__("seat"+seat).setPixmap(QPixmap(self.blockedabspath))
 def main():
     app = QApplication(sys.argv)
     window = SeatEditorForm()
