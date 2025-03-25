@@ -16,7 +16,9 @@ if __name__ == "__main__":
     from MainMenu import Ui_Dialog
 else:
     from .MainMenu import Ui_Dialog
-    
+
+#have image sidepanels show drama images
+
 class MainMenuForm(QDialog):
     def __init__(self):
         super().__init__()

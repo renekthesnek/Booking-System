@@ -11,7 +11,7 @@ if __name__ == "__main__":
 else:
     from .StaffConsole import Ui_Dialog
 
-
+#add the two remaining panels
 
 class StaffConsoleForm(QDialog):
     def __init__(self, UserName="No Parsed Username"):

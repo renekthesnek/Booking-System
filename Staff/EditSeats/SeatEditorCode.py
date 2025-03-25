@@ -14,6 +14,9 @@ if __name__ == "__main__":
 else:
     from .SeatEditor import Ui_Dialog
     
+#fix widget cascading after delete
+#add confirmation functionality to update seatstates in database
+    
 class SeatEditorForm(QDialog):
     def __init__(self, UserName="No Parsed Username"):
         super(SeatEditorForm, self).__init__()

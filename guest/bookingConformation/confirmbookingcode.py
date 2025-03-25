@@ -15,6 +15,9 @@ else:
     
 comboboxes = {}
 
+#add the preloading of user data based on parsed username, otherwise this is complete
+#do not attempt to create an account for a preloaded user
+
 class ConfirmBookingForm(QDialog):
     def __init__(self, booked_seats,username="No Parsed Username"):
         super(ConfirmBookingForm, self).__init__()

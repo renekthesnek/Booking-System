@@ -11,7 +11,7 @@ else:
     from .BookingConfirmed import Ui_Dialog
     
 
-
+#add functionality to show sidepanel images and show booking information
 class BookingConfirmedForm(QDialog):
     def __init__(self):
         super(BookingConfirmedForm, self).__init__()

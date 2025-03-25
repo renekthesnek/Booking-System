@@ -14,6 +14,7 @@ else:
     from .CreateEditConsole import Ui_Dialog
 
 
+#add edit and delete functionality
 
 class CreateEditConsoleForm(QDialog):
     def __init__(self, UserName="No Parsed Username"):

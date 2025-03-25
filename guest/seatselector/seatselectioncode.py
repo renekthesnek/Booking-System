@@ -12,6 +12,7 @@ if __name__ == "__main__":
 else:
     from .Seatselection import Ui_Dialog
 
+#add combobox functionality to allow for the preloading of performance data like booked seats
 
 class SeatSelectionForm(QDialog):
     def __init__(self,username="No Parsed Username"):
