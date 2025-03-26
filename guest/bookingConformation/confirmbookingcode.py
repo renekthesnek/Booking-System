@@ -2,6 +2,7 @@ import sys
 import os
 import pyodbc
 import hashlib
+import datetime
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -19,7 +20,7 @@ comboboxes = {}
 #do not attempt to create an account for a preloaded user
 
 class ConfirmBookingForm(QDialog):
-    def __init__(self, booked_seats,username="No Parsed Username"):
+    def __init__(self, booked_seats,performance,username="No Parsed Username"):
         super(ConfirmBookingForm, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
@@ -32,6 +33,7 @@ class ConfirmBookingForm(QDialog):
         self.booked_seats = booked_seats
         self.offset = 10
         self.labels = {}
+        self.performance = performance
         
         if len (self.booked_seats) == 1:
             self.CloneTemplate(0)
@@ -74,7 +76,7 @@ class ConfirmBookingForm(QDialog):
         elif len(self.ui.FullNameInput.text().strip().split(" ")) != 2:
             QMessageBox.critical(self, "Error", "Please enter a first and last name")
         else:
-            currentID = MaxID[0] + 1
+            userID = MaxID[0] + 1
             firstname,lastname = self.ui.FullNameInput.text().split(" ")
             username = self.ui.UsernameInput.text()
             #add validation for phone number or email here
@@ -94,16 +96,45 @@ class ConfirmBookingForm(QDialog):
                     phonenumber = None
             else:
                 email = None
+            
+            if phonenumber == None and email == None or phonenumber == None and email == "" or phonenumber == "" and email == None:
+                QMessageBox.critical(self, "Error", "Please enter a phone number or email")
+                return
             passwordhash = hashlib.sha224(self.ui.PasswordInput.text().encode()).hexdigest()
             permission = "Guest"
-            cursor.execute("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?)", (currentID,username,passwordhash,email,phonenumber,firstname,lastname,permission))
+            cursor.execute("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?)", (userID,username,passwordhash,email,phonenumber,firstname,lastname,permission))
             rows_affected = cursor.rowcount
             if rows_affected > 0:
-                QMessageBox.information(self, "Success", "Booking Confirmed")
-                cnxn.commit()
-                cnxn.close()
+                try:
+                    bookingID = cursor.execute("Select Max(BookingID) from Bookings").fetchone()[0] + 1
+                except:
+                    bookingID = 1
+                performanceid = cursor.execute("Select Performance_ID from Performances where Performance_title = ?", (self.performance,)).fetchone()[0]
+                totalprice = str(self.total_price) + ".00"
+                bookingdate = datetime.datetime.now().strftime("%Y-%m-%d")
+                cursor.execute("INSERT INTO Bookings VALUES (?,?,?,?,?)", (bookingID,userID,performanceid,bookingdate,totalprice))
+                rows_affected = cursor.rowcount
+                if rows_affected > 0:
+                    for seat in self.booked_seats:
+                        bookingseatsID = str(bookingID) + str(seat)
+                        cursor.execute("INSERT INTO BookingSeats VALUES (?,?,?)", (bookingseatsID,bookingID,seat))
+                        rows_affected = cursor.rowcount
+                        if rows_affected > 0:
+                            cursor.execute("UPDATE SeatStatus SET seat_state = ? WHERE Performance_ID = ? AND Seat_ID = ?", ("booked",performanceid,seat))
+                            rows_affected = cursor.rowcount
+                            if rows_affected > 0:
+                                cnxn.commit()
+                            else:
+                                QMessageBox.critical(self, "Error", "An error has occured during insertion of seat status")
+                                cnxn.close
+                        else:
+                            QMessageBox.critical(self, "Error", "An error has occured during insertion of booking seat")
+                            cnxn.close
+                else:
+                    QMessageBox.critical(self, "Error", "An error has occured during insertion of booking")
+                    cnxn.close
             else:
-                QMessageBox.critical(self, "Error", "An error has occured during insertion")
+                QMessageBox.critical(self, "Error", "An error has occured during insertion of user")
                 cnxn.close
             self.switch_to_Booking_Confirmed()
             
@@ -160,7 +191,7 @@ class ConfirmBookingForm(QDialog):
         return ticketprice
     
     def connect (self):
-        fileabspath = self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..", "..", "databaselogin.txt")
+        fileabspath = os.path.join(os.path.dirname(__file__), "..", "..", "databaselogin.txt")
         with open(fileabspath, 'r') as f:
             cs = f.read()
         cnxn = pyodbc.connect(cs)

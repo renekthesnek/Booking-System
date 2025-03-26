@@ -1,5 +1,6 @@
 import sys
 import os
+import pyodbc
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -23,11 +24,39 @@ class SeatSelectionForm(QDialog):
         self.ui.pushButton.clicked.connect(self.confirm_booking)
         self.seats = []
         self.rows = []
-        self.populate_lists()
         self.emptyabspath = os.path.join(os.path.dirname(__file__), "..", "images", "empty.png")
         self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..", "images", "highlighted.png")
+        self.blockedabspath = os.path.join(os.path.dirname(__file__), "..", "images", "blocked.png")
         self.booked_seats = []
         self.username = username
+
+        self.setupcombobox()
+        self.performance = self.ui.comboBox.currentText()
+        self.populate_lists()
+        
+        self.ui.comboBox.currentIndexChanged.connect(self.updatedisplays)
+        
+    def updatedisplays(self):
+        self.seats = []
+        self.rows = []
+        self.performance = self.ui.comboBox.currentText()
+        while self.ui.listWidget.count() > 0:
+            self.ui.listWidget.takeItem(0)
+        self.booked_seats = []
+        self.populate_lists()
+        for seatdata in self.seats:
+            seatlabel = seatdata["label_object"]
+            if seatdata["status"] == "booked":
+                seatlabel.setPixmap(QPixmap(self.blockedabspath))
+            elif seatdata["status"] == "empty":
+                seatlabel.setPixmap(QPixmap(self.emptyabspath))
+    
+    def setupcombobox(self):
+        cnxn = self.connect()
+        cursor = cnxn.cursor()
+        cursor.execute("Select Performance_title from Performances")
+        data = cursor.fetchall()
+        self.ui.comboBox.addItems([i[0] for i in data])
     
     def confirm_booking(self):
         if self.ui.listWidget.count() > 0:
@@ -39,6 +68,8 @@ class SeatSelectionForm(QDialog):
         for seatdata in self.seats:
             seatlabel = seatdata["label_object"]
             if seatlabel.underMouse():
+                if seatdata["status"] == "booked":
+                    return
                 self.toggle_seat_status(seatdata)
         else:
             super().mousePressEvent(event)
@@ -48,8 +79,11 @@ class SeatSelectionForm(QDialog):
         if seatdata["status"] == "empty":
             seatlabel.setPixmap(QPixmap(self.highlightedabspath))
             seatdata["status"] = "highlighted"
-            self.ui.listWidget.addItem(seatdata["seat_id"])
-            self.booked_seats.append(seatdata["seat_id"])
+            if self.ui.listWidget.findItems(seatdata["seat_id"], Qt.MatchExactly):
+                pass
+            else:
+                self.ui.listWidget.addItem(seatdata["seat_id"])
+                self.booked_seats.append(seatdata["seat_id"])
         elif seatdata["status"] == "highlighted":
             seatlabel.setPixmap(QPixmap(self.emptyabspath))
             seatdata["status"] = "empty"
@@ -62,19 +96,38 @@ class SeatSelectionForm(QDialog):
         
         
     def populate_lists(self):
+        cnxn = self.connect()
+        cursor = cnxn.cursor()
+        cursor.execute("SELECT performance_id FROM Performances WHERE Performance_title = ?", (self.performance))
+        performanceid = cursor.fetchone()[0]
+        cursor.execute("SELECT seat_state FROM seatstatus WHERE performance_id = ?", (performanceid))
+        data = cursor.fetchall()
+        index = 0
         for i in (["A","B","C","D","E","F","G","H","I","J"]):
             for j in range(20):
-                self.seats.append({"label_object":self.ui.__getattribute__("seat"+i+"_"+str(j+1)),"seat_id":i+str(j+1),"status":"empty"})
+                status = data[index][0]
+                index += 1
+                self.seats.append({"label_object":self.ui.__getattribute__("seat"+i+"_"+str(j+1)),"seat_id":i+str(j+1),"status":status})
+                if self.seats[-1]["status"] == "booked":
+                    self.seats[-1]["label_object"].setPixmap(QPixmap(self.blockedabspath))
         for i in(["A","B","C","D","E","F","G","H","I","J"]):
             for j in ("A","B"):
                 self.rows.append(self.ui.__getattribute__("Row"+i+"_"+j))
 
     def switch_to_confirm_booking(self):
+        performance = self.ui.comboBox.currentText()
         self.close()
         from bookingConformation import ConfirmBookingForm
-        newwindow = ConfirmBookingForm(self.booked_seats,self.username)
+        newwindow = ConfirmBookingForm(self.booked_seats,performance,self.username)
         newwindow.show()
         newwindow.exec_()
+    
+    def connect (self):
+        fileabspath = os.path.join(os.path.dirname(__file__), "..", "..", "databaselogin.txt")
+        with open(fileabspath, 'r') as f:
+            cs = f.read()
+        cnxn = pyodbc.connect(cs)
+        return cnxn
 
 def main():
     app = QApplication(sys.argv)

@@ -24,7 +24,10 @@ class CreateEditConsoleForm(QDialog):
         self.setWindowTitle("Add Peformance")
         self.ui.BackToMenuButton.clicked.connect(self.switch_to_Staff_console)
         self.ui.AddPeformanceButton.clicked.connect(self.addPeformance)
-        self.ui.loggedindisplay.setText("Logged in as: " + UserName)
+        if UserName == "No Parsed Username":
+            self.ui.loggedindisplay.setText("Not Logged In")
+        else:
+            self.ui.loggedindisplay.setText("logged in as " + UserName)
         self.ui.AddPeformanceDateEdit.setDate(date.today())
         self.ui.comboBox.currentIndexChanged.connect(self.updatedisplays)
         try:

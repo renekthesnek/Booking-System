@@ -32,10 +32,17 @@ class SeatEditorForm(QDialog):
         self.widgets = 0
         self.ui.scrollAreaWidgetContents.adjustSize()
         self.ui.scrollArea.setWidgetResizable(True)
+        
+        if UserName == "No Parsed Username":
+            self.ui.loggedindisplay.setText("Not Logged In")
+        else:
+            self.ui.loggedindisplay.setText("logged in as " + UserName)
+        
         self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..",'..','guest', "images", "highlighted.png")
         self.emptyabspath = os.path.join(os.path.dirname(__file__), "..",'..','guest', "images", "empty.png")
         self.getpeformancedata()
         self.getseatstates()
+
         
     
     def mousePressEvent(self, event):

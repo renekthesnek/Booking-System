@@ -22,7 +22,10 @@ class StaffConsoleForm(QDialog):
         self.ui.BackToMenuButton.clicked.connect(self.switch_to_main_menu)
         self.ui.ToPeformanceMenuButton.clicked.connect(self.switch_to_CreateEditConsole)
         self.ui.EditSeatsForPeformanceButton.clicked.connect(self.switch_to_seat_editor)
-        self.ui.loggedindisplay.setText("Logged in as: " + UserName)
+        if UserName == "No Parsed Username":
+            self.ui.loggedindisplay.setText("Not Logged In")
+        else:
+            self.ui.loggedindisplay.setText("logged in as " + UserName)
 
     def switch_to_main_menu(self):
         self.close()
