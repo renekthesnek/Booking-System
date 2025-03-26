@@ -61,9 +61,9 @@ class ConfirmBookingForm(QDialog):
         cursor = cnxn.cursor()
         cursor.execute("Select Max(UserID) from Users")
         MaxID = cursor.fetchone()
-        if self.ui.UsernameInput.text == "" or self.ui.FullNameInput.text == "":
+        if self.ui.UsernameInput.text() == "" or self.ui.FullNameInput.text() == "":
             QMessageBox.critical(self, "Error", "Please enter a username and full name")
-        elif self.ui.EmailInput.text() == "" and self.ui.PhoneNumberlInput.text == "":
+        elif self.ui.EmailInput.text() == "" and self.ui.PhoneNumberlInput.text() == "":
             QMessageBox.critical(self, "Error", "Please enter Email or phone number")
         elif self.ui.PasswordInput.text() == "":
             QMessageBox.critical(self, "Error", "Please enter a password")
