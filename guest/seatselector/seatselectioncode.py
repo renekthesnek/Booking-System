@@ -13,7 +13,7 @@ if __name__ == "__main__":
 else:
     from .Seatselection import Ui_Dialog
 
-#add combobox functionality to allow for the preloading of performance data like booked seats
+
 
 class SeatSelectionForm(QDialog):
     def __init__(self,username="No Parsed Username"):
@@ -100,14 +100,15 @@ class SeatSelectionForm(QDialog):
         cursor = cnxn.cursor()
         cursor.execute("SELECT performance_id FROM Performances WHERE Performance_title = ?", (self.performance))
         performanceid = cursor.fetchone()[0]
-        cursor.execute("SELECT seat_state FROM seatstatus WHERE performance_id = ?", (performanceid))
-        data = cursor.fetchall()
         index = 0
         for i in (["A","B","C","D","E","F","G","H","I","J"]):
             for j in range(20):
-                status = data[index][0]
+                seatid = i+str(j+1)
+                cursor.execute("SELECT seat_state FROM seatstatus WHERE seat_id = ? AND performance_id = ?", (seatid,performanceid))
+                data = cursor.fetchone()
+                status = data[0]
                 index += 1
-                self.seats.append({"label_object":self.ui.__getattribute__("seat"+i+"_"+str(j+1)),"seat_id":i+str(j+1),"status":status})
+                self.seats.append({"label_object":self.ui.__getattribute__("seat"+i+"_"+str(j+1)),"seat_id":seatid,"status":status})
                 if self.seats[-1]["status"] == "booked":
                     self.seats[-1]["label_object"].setPixmap(QPixmap(self.blockedabspath))
         for i in(["A","B","C","D","E","F","G","H","I","J"]):

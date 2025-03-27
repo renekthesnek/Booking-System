@@ -30,11 +30,8 @@ class MainMenuForm(QDialog):
         self.ui.nologinbutton.clicked.connect(self.no_login)
 
     def guest_login(self):
-        return
-
-    def staff_login(self): 
-        username = self.ui.StaffLoginUsername.text()
-        password = self.ui.StaffLoginPassword.text()
+        username = self.ui.GuestLoginUsernameInput.text()
+        password = self.ui.GuestLoginPasswordInput.text()
         passwordhash = hashlib.sha224(password.encode()).hexdigest()
 
         cnxn = self.connect()
@@ -45,17 +42,36 @@ class MainMenuForm(QDialog):
         cnxn.close()
         
         if data is not None:
+            self.switch_to_seatselector(username)
+        else:
+            QMessageBox.critical(self, "Error", "Invalid username or password")
+            return
+
+    def staff_login(self): 
+        username = self.ui.StaffLoginUsername.text()
+        password = self.ui.StaffLoginPassword.text()
+        passwordhash = hashlib.sha224(password.encode()).hexdigest()
+
+        cnxn = self.connect()
+        cursor = cnxn.cursor()
+        cursor.execute("SELECT * FROM Users WHERE username = ? AND password_hash = ?", (username, passwordhash))
+        data = cursor.fetchone()
+        permission = data[7]
+        cursor.close()
+        cnxn.close()
+        
+        if data is not None and permission == 'Staff':
             self.switch_to_staff_console(username)
         else:
             QMessageBox.critical(self, "Error", "Invalid username or password")
             return
 
     def no_login(self):
-        self.switch_to_seatselector()
+        self.switch_to_seatselector("no parsed username")
 
-    def switch_to_seatselector(self):
+    def switch_to_seatselector(self,username):
         self.close()
-        newwindow = SeatSelectionForm()
+        newwindow = SeatSelectionForm(username)
         newwindow.show()
         newwindow.exec_()
         
