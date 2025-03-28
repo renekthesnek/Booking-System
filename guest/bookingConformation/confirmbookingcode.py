@@ -3,6 +3,7 @@ import os
 import pyodbc
 import hashlib
 import datetime
+import re
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -16,8 +17,7 @@ else:
     
 comboboxes = {}
 
-#add the preloading of user data based on parsed username, otherwise this is complete
-#do not attempt to create an account for a preloaded user
+
 
 class ConfirmBookingForm(QDialog):
     def __init__(self, booked_seats,performance,username="No Parsed Username"):
@@ -30,6 +30,30 @@ class ConfirmBookingForm(QDialog):
             self.ui.LoginDisplay.setText("Not Logged In")
         else:
             self.ui.LoginDisplay.setText("logged in as " + username)
+            self.username = username  
+            cnxn = self.connect()
+            cursor = cnxn.cursor()
+            cursor.execute("select * from Users where Username = ?", (self.username))
+            data = cursor.fetchone()
+            
+            self.ui.UsernameInput.setText(data[1])
+            self.ui.UsernameInput.setEnabled(False)
+            
+            self.ui.FullNameInput.setText(data[5] + " " + data[6])
+            self.ui.FullNameInput.setEnabled(False)
+            
+            try:
+                self.ui.EmailInput.setText(data[3])
+                self.ui.EmailInput.setEnabled(False)
+            except:
+                pass
+            try:
+                self.ui.PhoneNumberlInput.setText(str(data[4]))
+                self.ui.PhoneNumberlInput.setEnabled(False)
+            except:
+                pass
+            self.ui.PasswordInput.setEnabled(False)
+            self.ui.ConfirmPasswordInput.setEnabled(False)
         self.booked_seats = booked_seats
         self.offset = 10
         self.labels = {}
@@ -58,90 +82,106 @@ class ConfirmBookingForm(QDialog):
         self.calculate_total_price()
     
     def confirm_booking(self):
-        #make if for whether user logged in or not
-        cnxn = self.connect()
-        cursor = cnxn.cursor()
-        cursor.execute("Select Max(UserID) from Users")
-        MaxID = cursor.fetchone()
-        if self.ui.UsernameInput.text() == "" or self.ui.FullNameInput.text() == "":
-            QMessageBox.critical(self, "Error", "Please enter a username and full name")
-        elif self.ui.EmailInput.text() == "" and self.ui.PhoneNumberlInput.text() == "":
-            QMessageBox.critical(self, "Error", "Please enter Email or phone number")
-        elif self.ui.PasswordInput.text() == "":
-            QMessageBox.critical(self, "Error", "Please enter a password")
-        elif self.ui.ConfirmPasswordInput.text() == "":
-            QMessageBox.critical(self, "Error", "Please confirm your password")
-        elif self.ui.PasswordInput.text() != self.ui.ConfirmPasswordInput.text():
-            QMessageBox.critical(self, "Error", "Passwords do not match")
-        elif len(self.ui.FullNameInput.text().strip().split(" ")) != 2:
-            QMessageBox.critical(self, "Error", "Please enter a first and last name")
+        if self.username == "No Parsed Username":
+            cnxn = self.connect()
+            cursor = cnxn.cursor()
+            cursor.execute("Select Max(UserID) from Users")
+            MaxID = cursor.fetchone()
+            if self.ui.UsernameInput.text() == "" or self.ui.FullNameInput.text() == "":
+                QMessageBox.critical(self, "Error", "Please enter a username and full name")
+            elif self.ui.EmailInput.text() == "" and self.ui.PhoneNumberlInput.text() == "":
+                QMessageBox.critical(self, "Error", "Please enter Email or phone number")
+            elif self.ui.PasswordInput.text() == "":
+                QMessageBox.critical(self, "Error", "Please enter a password")
+            elif self.ui.ConfirmPasswordInput.text() == "":
+                QMessageBox.critical(self, "Error", "Please confirm your password")
+            elif self.ui.PasswordInput.text() != self.ui.ConfirmPasswordInput.text():
+                QMessageBox.critical(self, "Error", "Passwords do not match")
+            elif len(self.ui.FullNameInput.text().strip().split(" ")) != 2:
+                QMessageBox.critical(self, "Error", "Please enter a first and last name")
+            else:
+                userID = MaxID[0] + 1
+                firstname,lastname = self.ui.FullNameInput.text().split(" ")
+                username = self.ui.UsernameInput.text()
+                if self.ui.PhoneNumberlInput.text != "":
+                    phonenumber = self.ui.PhoneNumberlInput.text()
+                    try:
+                        phonenumber = int(phonenumber)
+                    except ValueError:
+                        phonenumber = None
+                else:
+                    phonenumber = None
+                if self.ui.EmailInput.text != "":
+                    email = self.ui.EmailInput.text()
+                    validationpattern =  r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                    if re.match(validationpattern, email):
+                        email = email
+                    else:
+                        QMessageBox.critical(self, "Error", "Please enter a valid email address")
+                        return
+                    try:
+                        email = str(email)
+                    except ValueError:
+                        phonenumber = None
+                else:
+                    email = None
+                
+                if phonenumber == None and email == None or phonenumber == None and email == "" or phonenumber == "" and email == None:
+                    QMessageBox.critical(self, "Error", "Please enter a phone number or email")
+                    return
+                passwordhash = hashlib.sha224(self.ui.PasswordInput.text().encode()).hexdigest()
+                permission = "Guest"
+                cursor.execute("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?)", (userID,username,passwordhash,email,phonenumber,firstname,lastname,permission))
+                rows_affected = cursor.rowcount
         else:
-            userID = MaxID[0] + 1
-            firstname,lastname = self.ui.FullNameInput.text().split(" ")
+            cnxn = self.connect()
+            cursor = cnxn.cursor()
             username = self.ui.UsernameInput.text()
-            #add validation for phone number or email here
-            if self.ui.PhoneNumberlInput.text != "":
-                phonenumber = self.ui.PhoneNumberlInput.text()
-                try:
-                    phonenumber = int(phonenumber)
-                except ValueError:
-                    phonenumber = None
-            else:
-                phonenumber = None
-            if self.ui.EmailInput.text != "":
-                email = self.ui.EmailInput.text()
-                try:
-                    email = str(email)
-                except ValueError:
-                    phonenumber = None
-            else:
-                email = None
-            
-            if phonenumber == None and email == None or phonenumber == None and email == "" or phonenumber == "" and email == None:
-                QMessageBox.critical(self, "Error", "Please enter a phone number or email")
-                return
-            passwordhash = hashlib.sha224(self.ui.PasswordInput.text().encode()).hexdigest()
-            permission = "Guest"
-            cursor.execute("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?)", (userID,username,passwordhash,email,phonenumber,firstname,lastname,permission))
+            cursor.execute("select UserID from Users where Username = ?", (self.username,))
+            userID = cursor.fetchone()[0]
+            loggedin = True
+            rows_affected = 0
+        
+        if rows_affected > 0 or loggedin:
+            try:
+                self.bookingid = cursor.execute("Select Max(booking_id) from Bookings").fetchone()[0] + 1
+            except:
+                self.bookingid = 1
+            performanceid = cursor.execute("Select Performance_ID from Performances where Performance_title = ?", (self.performance,)).fetchone()[0]
+            totalprice = str(self.total_price) + ".00"
+            bookingdate = datetime.datetime.now().strftime("%Y-%m-%d")
+            cursor.execute("INSERT INTO Bookings VALUES (?,?,?,?,?)", (self.bookingid,userID,performanceid,bookingdate,totalprice))
             rows_affected = cursor.rowcount
             if rows_affected > 0:
-                try:
-                    bookingID = cursor.execute("Select Max(BookingID) from Bookings").fetchone()[0] + 1
-                except:
-                    bookingID = 1
-                performanceid = cursor.execute("Select Performance_ID from Performances where Performance_title = ?", (self.performance,)).fetchone()[0]
-                totalprice = str(self.total_price) + ".00"
-                bookingdate = datetime.datetime.now().strftime("%Y-%m-%d")
-                cursor.execute("INSERT INTO Bookings VALUES (?,?,?,?,?)", (bookingID,userID,performanceid,bookingdate,totalprice))
-                rows_affected = cursor.rowcount
-                if rows_affected > 0:
-                    for seat in self.booked_seats:
-                        bookingseatsID = str(bookingID) + str(seat)
-                        cursor.execute("INSERT INTO BookingSeats VALUES (?,?,?)", (bookingseatsID,bookingID,seat))
+                print(self.booked_seats)
+                for seat in self.booked_seats:
+                    print(seat)
+                    bookingseatsID = str(self.bookingid) + str(seat)
+                    cursor.execute("INSERT INTO BookingSeats VALUES (?,?,?)", (bookingseatsID,self.bookingid,seat))
+                    rows_affected = cursor.rowcount
+                    if rows_affected > 0:
+                        cursor.execute("UPDATE SeatStatus SET seat_state = ? WHERE Performance_ID = ? AND Seat_ID = ?", ("booked",performanceid,seat))
                         rows_affected = cursor.rowcount
                         if rows_affected > 0:
-                            cursor.execute("UPDATE SeatStatus SET seat_state = ? WHERE Performance_ID = ? AND Seat_ID = ?", ("booked",performanceid,seat))
-                            rows_affected = cursor.rowcount
-                            if rows_affected > 0:
-                                cnxn.commit()
-                            else:
-                                QMessageBox.critical(self, "Error", "An error has occured during insertion of seat status")
-                                cnxn.close
+                            cnxn.commit()
                         else:
-                            QMessageBox.critical(self, "Error", "An error has occured during insertion of booking seat")
+                            QMessageBox.critical(self, "Error", "An error has occured during insertion of seat status")
                             cnxn.close
-                else:
-                    QMessageBox.critical(self, "Error", "An error has occured during insertion of booking")
-                    cnxn.close
+                    else:
+                        QMessageBox.critical(self, "Error", "An error has occured during insertion of booking seat")
+                        cnxn.close
+                self.switch_to_Booking_Confirmed()
             else:
-                QMessageBox.critical(self, "Error", "An error has occured during insertion of user")
+                QMessageBox.critical(self, "Error", "An error has occured during insertion of booking")
                 cnxn.close
-            self.switch_to_Booking_Confirmed()
+        else:
+            QMessageBox.critical(self, "Error", "An error has occured during insertion of user")
+            cnxn.close
             
     def switch_to_Booking_Confirmed(self):
         self.close()
         from ConfirmedBooking import BookingConfirmedForm
-        newwindow = BookingConfirmedForm()
+        newwindow = BookingConfirmedForm(self.bookingid)
         newwindow.show()
         newwindow.exec_()
     
@@ -240,7 +280,7 @@ class clonedlabel(QLabel):
         
 def main():
     app = QApplication(sys.argv)
-    window = ConfirmBookingForm(["A1"])
+    window = ConfirmBookingForm(["A1"],"macbeth")
     window.show()
     sys.exit(app.exec_())
 
