@@ -23,12 +23,12 @@ class SeatSelectionForm(QDialog):
         self.setWindowTitle("Seat Selector")
         self.ui.pushButton.clicked.connect(self.confirm_booking)
         self.seats = []
-        self.rows = []
         self.emptyabspath = os.path.join(os.path.dirname(__file__), "..", "images", "empty.png")
         self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..", "images", "highlighted.png")
         self.blockedabspath = os.path.join(os.path.dirname(__file__), "..", "images", "blocked.png")
         self.booked_seats = []
         self.username = username
+        print(self.username)
 
         self.setupcombobox()
         self.performance = self.ui.comboBox.currentText()
@@ -38,7 +38,6 @@ class SeatSelectionForm(QDialog):
         
     def updatedisplays(self):
         self.seats = []
-        self.rows = []
         self.performance = self.ui.comboBox.currentText()
         while self.ui.listWidget.count() > 0:
             self.ui.listWidget.takeItem(0)
@@ -83,7 +82,7 @@ class SeatSelectionForm(QDialog):
                 pass
             else:
                 self.ui.listWidget.addItem(seatdata["seat_id"])
-                self.booked_seats.append(seatdata["seat_id"])
+                self.booked_seats.append({"seat_id":seatdata["seat_id"],"seat_row":seatdata["seat_row"]})
         elif seatdata["status"] == "highlighted":
             seatlabel.setPixmap(QPixmap(self.emptyabspath))
             seatdata["status"] = "empty"
@@ -92,8 +91,8 @@ class SeatSelectionForm(QDialog):
                 if item.text() == seatdata["seat_id"]:
                     self.ui.listWidget.takeItem(index)
                     break
-            self.booked_seats.remove(seatdata["seat_id"])
-        
+            self.booked_seats = [seat for seat in self.booked_seats if seat["seat_id"] != seatdata["seat_id"]]
+
         
     def populate_lists(self):
         cnxn = self.connect()
@@ -103,19 +102,24 @@ class SeatSelectionForm(QDialog):
         index = 0
         for i in (["A","B","C","D","E","F","G","H","I","J"]):
             for j in range(20):
+                if j <= 10:
+                    seatRow = f"Row{i}_A"
+                else:
+                    seatRow = f"Row{i}_B"
                 seatid = i+str(j+1)
                 cursor.execute("SELECT seat_state FROM seatstatus WHERE seat_id = ? AND performance_id = ?", (seatid,performanceid))
                 data = cursor.fetchone()
                 status = data[0]
                 index += 1
-                self.seats.append({"label_object":self.ui.__getattribute__("seat"+i+"_"+str(j+1)),"seat_id":seatid,"status":status})
+                self.seats.append({"label_object":self.ui.__getattribute__("seat"+i+"_"+str(j+1)),"seat_id":seatid,"status":status,"seat_row":seatRow})
                 if self.seats[-1]["status"] == "booked":
                     self.seats[-1]["label_object"].setPixmap(QPixmap(self.blockedabspath))
-        for i in(["A","B","C","D","E","F","G","H","I","J"]):
-            for j in ("A","B"):
-                self.rows.append(self.ui.__getattribute__("Row"+i+"_"+j))
-
     def switch_to_confirm_booking(self):
+        self.booked_seats = sorted(self.booked_seats, key=lambda x: (x["seat_row"], int(x["seat_id"][1:])))
+        for i in range(0,len(self.booked_seats)-1):
+            if (self.booked_seats[i]["seat_row"] != self.booked_seats[i+1]["seat_row"]) or (int(self.booked_seats[i]["seat_id"][1:]) + 1 != int(self.booked_seats[i+1]["seat_id"][1:])):
+                QMessageBox.warning(self, "Warning", "Seats Must Be Next To Each Other")
+                return
         performance = self.ui.comboBox.currentText()
         self.close()
         from bookingConformation import ConfirmBookingForm

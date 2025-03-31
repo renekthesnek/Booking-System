@@ -28,6 +28,7 @@ class MainMenuForm(QDialog):
         self.ui.guestloginbutton.clicked.connect(self.guest_login)
         self.ui.staffloginbutton.clicked.connect(self.staff_login)
         self.ui.nologinbutton.clicked.connect(self.no_login)
+        self.ui.guestloginbutton.setFocus()
 
     def guest_login(self):
         username = self.ui.GuestLoginUsernameInput.text()
@@ -36,11 +37,8 @@ class MainMenuForm(QDialog):
 
         cnxn = self.connect()
         cursor = cnxn.cursor()
-        cursor.execute("SELECT * FROM Users WHERE username = ? AND password_hash = ?", (username, passwordhash))
+        cursor.execute("SELECT * FROM Users WHERE username = ? AND password_hash = ? or email = ? AND password_hash = ?", (username, passwordhash, username, passwordhash))
         data = cursor.fetchone()
-        cursor.close()
-        cnxn.close()
-        
         if data is not None:
             self.switch_to_seatselector(username)
         else:
@@ -52,13 +50,16 @@ class MainMenuForm(QDialog):
         password = self.ui.StaffLoginPassword.text()
         passwordhash = hashlib.sha224(password.encode()).hexdigest()
 
-        cnxn = self.connect()
-        cursor = cnxn.cursor()
-        cursor.execute("SELECT * FROM Users WHERE username = ? AND password_hash = ?", (username, passwordhash))
-        data = cursor.fetchone()
-        permission = data[7]
-        cursor.close()
-        cnxn.close()
+        try:
+            cnxn = self.connect()
+            cursor = cnxn.cursor()
+            cursor.execute("SELECT * FROM Users WHERE username = ? AND password_hash = ?", (username, passwordhash))
+            data = cursor.fetchone()
+            permission = data[7]
+            cursor.close()
+            cnxn.close()
+        except:
+            data = None
         
         if data is not None and permission == 'Staff':
             self.switch_to_staff_console(username)
@@ -67,7 +68,8 @@ class MainMenuForm(QDialog):
             return
 
     def no_login(self):
-        self.switch_to_seatselector("no parsed username")
+        self.switch_to_seatselector("No Parsed Username")
+
 
     def switch_to_seatselector(self,username):
         self.close()

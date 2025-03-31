@@ -58,6 +58,7 @@ class ConfirmBookingForm(QDialog):
         self.offset = 10
         self.labels = {}
         self.performance = performance
+        self.username = username
         
         if len (self.booked_seats) == 1:
             self.CloneTemplate(0)
@@ -153,9 +154,8 @@ class ConfirmBookingForm(QDialog):
             cursor.execute("INSERT INTO Bookings VALUES (?,?,?,?,?)", (self.bookingid,userID,performanceid,bookingdate,totalprice))
             rows_affected = cursor.rowcount
             if rows_affected > 0:
-                print(self.booked_seats)
                 for seat in self.booked_seats:
-                    print(seat)
+                    seat = seat["seat_id"]
                     bookingseatsID = str(self.bookingid) + str(seat)
                     cursor.execute("INSERT INTO BookingSeats VALUES (?,?,?)", (bookingseatsID,self.bookingid,seat))
                     rows_affected = cursor.rowcount
@@ -198,7 +198,7 @@ class ConfirmBookingForm(QDialog):
         newticketlabel.setParent(self.ui.scrollAreaWidgetContents)
         newticketlabel.setGeometry(10,self.offset,141,41)
         newticketlabel.setFont(QFont('Open Sans Extrabold',24))
-        newticketlabel.setText(self.booked_seats[currentindex])
+        newticketlabel.setText(self.booked_seats[currentindex]["seat_id"])
         newticketlabel.setObjectName(f"Seat{seatname}Label")
         newticketlabel.setStyleSheet("color: rgb(238, 238, 238);")
         self.labels[f"Seat{seatname}Label"] = newticketlabel
