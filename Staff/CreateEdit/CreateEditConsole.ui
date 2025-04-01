@@ -292,6 +292,9 @@
     </property>
    </widget>
    <widget class="QLineEdit" name="EditPeformanceIDInput">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>170</x>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\guest\bookingConformation\ConfirmBooking.ui'
+# Form implementation generated from reading ui file '.\Booking-System\guest\bookingConformation\ConfirmBooking.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #

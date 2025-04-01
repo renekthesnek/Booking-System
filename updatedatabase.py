@@ -1,9 +1,5 @@
 #used for mass updating the database
 import pyodbc
-import hashlib
-import datetime
-import random
-import string
 
 with open ("databaselogin.txt", "r") as f:
     cs = f.read()

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\Staff\CreateEdit\CreateEditConsole.ui'
+# Form implementation generated from reading ui file '.\Booking-System\Staff\CreateEdit\CreateEditConsole.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -111,6 +111,7 @@ class Ui_Dialog(object):
         self.EditPeformanceIDLabel.setStyleSheet("color: rgb(238, 238, 238);")
         self.EditPeformanceIDLabel.setObjectName("EditPeformanceIDLabel")
         self.EditPeformanceIDInput = QtWidgets.QLineEdit(self.EditPeformanceFrame)
+        self.EditPeformanceIDInput.setEnabled(False)
         self.EditPeformanceIDInput.setGeometry(QtCore.QRect(170, 110, 201, 31))
         font = QtGui.QFont()
         font.setPointSize(14)

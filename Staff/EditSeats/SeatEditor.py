@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\Staff\EditSeats\SeatEditor.ui'
+# Form implementation generated from reading ui file '.\Booking-System\Staff\EditSeats\SeatEditor.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #

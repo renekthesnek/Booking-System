@@ -28,7 +28,6 @@ class SeatSelectionForm(QDialog):
         self.blockedabspath = os.path.join(os.path.dirname(__file__), "..", "images", "blocked.png")
         self.booked_seats = []
         self.username = username
-        print(self.username)
 
         self.setupcombobox()
         self.performance = self.ui.comboBox.currentText()
@@ -98,11 +97,16 @@ class SeatSelectionForm(QDialog):
         cnxn = self.connect()
         cursor = cnxn.cursor()
         cursor.execute("SELECT performance_id FROM Performances WHERE Performance_title = ?", (self.performance))
-        performanceid = cursor.fetchone()[0]
+        performanceid = cursor.fetchone()
+        if performanceid == None:
+            QMessageBox.critical(self, "Error", "No Performances found")#
+            self.switch_to_main_menu()
+        else:
+            performanceid = performanceid[0]
         index = 0
         for i in (["A","B","C","D","E","F","G","H","I","J"]):
             for j in range(20):
-                if j <= 10:
+                if (j+1) <= 10:
                     seatRow = f"Row{i}_A"
                 else:
                     seatRow = f"Row{i}_B"
@@ -124,6 +128,13 @@ class SeatSelectionForm(QDialog):
         self.close()
         from bookingConformation import ConfirmBookingForm
         newwindow = ConfirmBookingForm(self.booked_seats,performance,self.username)
+        newwindow.show()
+        newwindow.exec_()
+    
+    def switch_to_main_menu(self):
+        self.close()
+        from mainmenu import MainMenuForm
+        newwindow = MainMenuForm(self.username)
         newwindow.show()
         newwindow.exec_()
     
