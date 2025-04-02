@@ -22,6 +22,7 @@ class StaffConsoleForm(QDialog):
         self.ui.BackToMenuButton.clicked.connect(self.switch_to_main_menu)
         self.ui.ToPeformanceMenuButton.clicked.connect(self.switch_to_CreateEditConsole)
         self.ui.EditSeatsForPeformanceButton.clicked.connect(self.switch_to_seat_editor)
+        self.ui.ProcessBookingsButton.clicked.connect(self.switch_to_approve_bookings)
         if UserName == "No Parsed Username":
             self.ui.loggedindisplay.setText("Not Logged In")
         else:
@@ -45,6 +46,13 @@ class StaffConsoleForm(QDialog):
         self.close()
         from EditSeats import SeatEditorForm
         newwindow = SeatEditorForm()
+        newwindow.show()
+        newwindow.exec_()
+        
+    def switch_to_approve_bookings(self):
+        self.close()
+        from BookingApprove import ApproveBookingsForm
+        newwindow = ApproveBookingsForm()
         newwindow.show()
         newwindow.exec_()
 def main():

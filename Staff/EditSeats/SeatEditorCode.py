@@ -46,7 +46,6 @@ class SeatEditorForm(QDialog):
         for seatdata in self.seats:
             seatlabel = seatdata["label_object"]
             if seatlabel.underMouse():
-                #add highlighting of seats and bind to comboboxes to make seats red when blocked
                 if seatdata["status"] == "empty":
                     self.addnewclone(seatdata)
                     self.widgets += 1
