@@ -20,9 +20,12 @@ class ApproveBookingsForm(QDialog):
         self.setWindowTitle("Booking Confirmation")
         self.ui.BackToMenuButton.clicked.connect(self.switch_to_Staff_console)
         self.ui.FirstRecordButton.clicked.connect(self.firstrecord)
-        
+        self.ui.NextRecordButton.clicked.connect(self.nextrecord)
+        self.ui.PreviousRecordButton.clicked.connect(self.previousrecord)
+        self.ui.tableWidget.setStyleSheet("background-color: rgb(126, 126, 126);")
         self.setuptable("SELECT * FROM Bookings",["BookingID", "PerformanceID", "UserID", "Booking Date", "Booking Price"])
         
+        self.firstrecord()
         
     def setuptable(self,sqlquery,headers):
         #use tablewidget ig
@@ -38,16 +41,12 @@ class ApproveBookingsForm(QDialog):
             for j in range(len(data[0])):
                 item = QTableWidgetItem(str(data[i][j]))
                 self.ui.tableWidget.setItem(i, j, item)
-                
-    def firstrecord(self):
-        data = []
-        for column in range(self.ui.tableWidget.columnCount()):
-            data.append(self.ui.tableWidget.item(0, column).text())
             
+    def updatewidgets(self,data):
         bookingID = data[0]
         bookingprice = data[4]
-        userID = data[2]
-        performanceID = data[1]
+        userID = data[1]
+        performanceID = data[2]
         
         cnxn = self.connect()
         cursor = cnxn.cursor()
@@ -72,7 +71,34 @@ class ApproveBookingsForm(QDialog):
         self.ui.BookedSeatsDisplay.setText(str(numseats))
         self.ui.FullNameDisplay.setText(str(username))
         self.ui.PerformanceDisplay.setText(str(performance))
+                
+    def firstrecord(self):
+        data = []
+        for column in range(self.ui.tableWidget.columnCount()):
+            data.append(self.ui.tableWidget.item(0, column).text())
         
+        self.currentrow = 0
+        self.updatewidgets(data)
+        
+    def nextrecord(self):
+        if self.currentrow >= self.ui.tableWidget.rowCount()-1:
+            return
+        self.currentrow += 1
+        data = []
+        for column in range(self.ui.tableWidget.columnCount()):
+            data.append(self.ui.tableWidget.item(self.currentrow, column).text())
+        
+        self.updatewidgets(data)
+    
+    def previousrecord(self):
+        if self.currentrow <= 0:
+            return
+        self.currentrow -= 1
+        data = []
+        for column in range(self.ui.tableWidget.columnCount()):
+            data.append(self.ui.tableWidget.item(self.currentrow, column).text())
+        
+        self.updatewidgets(data)
 
     def connect(self):
         fileabspath = self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..", "..", "databaselogin.txt")

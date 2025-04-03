@@ -218,8 +218,13 @@ class clonedcombo(QComboBox):
     def on_change(self):
         global Blocked_seats
         seat = self.myticketlabel.text()
-        seat = seat[0]+"_"+seat[1]+seat[2]
-        if self.currentText() == "Available":
+        if len(seat) == 3:
+            seat = seat[0]+"_"+seat[1]+seat[2]
+        elif len(seat) == 2:
+            seat = seat[0]+"_"+seat[1]
+        else:
+            return
+        if self.currentText() == "available":
             self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..",'..','guest', "images", "highlighted.png")
             self.ui.__getattribute__("seat"+seat).setPixmap(QPixmap(self.highlightedabspath))
             Blocked_seats = [dict(t) for t in {tuple(d.items()) for d in Blocked_seats}]
