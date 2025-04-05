@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\MainMenu.ui'
+# Form implementation generated from reading ui file '.\guest\mainmenu\MainMenu.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -74,6 +74,7 @@ class Ui_Dialog(object):
         font = QtGui.QFont()
         font.setFamily("Open Sans Extrabold")
         self.GuestLoginPasswordInput.setFont(font)
+        self.GuestLoginPasswordInput.setEchoMode(QtWidgets.QLineEdit.Password)
         self.GuestLoginPasswordInput.setObjectName("GuestLoginPasswordInput")
         self.StaffLoginFrame = QtWidgets.QFrame(Dialog)
         self.StaffLoginFrame.setGeometry(QtCore.QRect(280, 260, 191, 201))
@@ -89,12 +90,12 @@ class Ui_Dialog(object):
         self.StaffloginUsernameLabel.setFont(font)
         self.StaffloginUsernameLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.StaffloginUsernameLabel.setObjectName("StaffloginUsernameLabel")
-        self.StaffLoginUsernameInput = QtWidgets.QLineEdit(self.StaffLoginFrame)
-        self.StaffLoginUsernameInput.setGeometry(QtCore.QRect(20, 60, 151, 21))
+        self.StaffLoginUsername = QtWidgets.QLineEdit(self.StaffLoginFrame)
+        self.StaffLoginUsername.setGeometry(QtCore.QRect(20, 60, 151, 21))
         font = QtGui.QFont()
         font.setFamily("Open Sans Extrabold")
-        self.StaffLoginUsernameInput.setFont(font)
-        self.StaffLoginUsernameInput.setObjectName("StaffLoginUsernameInput")
+        self.StaffLoginUsername.setFont(font)
+        self.StaffLoginUsername.setObjectName("StaffLoginUsername")
         self.StaffloginPasswordLabel = QtWidgets.QLabel(self.StaffLoginFrame)
         self.StaffloginPasswordLabel.setGeometry(QtCore.QRect(20, 100, 151, 21))
         font = QtGui.QFont()
@@ -103,12 +104,14 @@ class Ui_Dialog(object):
         self.StaffloginPasswordLabel.setFont(font)
         self.StaffloginPasswordLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.StaffloginPasswordLabel.setObjectName("StaffloginPasswordLabel")
-        self.StaffLoginPasswordInput = QtWidgets.QLineEdit(self.StaffLoginFrame)
-        self.StaffLoginPasswordInput.setGeometry(QtCore.QRect(20, 130, 151, 21))
+        self.StaffLoginPassword = QtWidgets.QLineEdit(self.StaffLoginFrame)
+        self.StaffLoginPassword.setGeometry(QtCore.QRect(20, 130, 151, 21))
         font = QtGui.QFont()
         font.setFamily("Open Sans Extrabold")
-        self.StaffLoginPasswordInput.setFont(font)
-        self.StaffLoginPasswordInput.setObjectName("StaffLoginPasswordInput")
+        self.StaffLoginPassword.setFont(font)
+        self.StaffLoginPassword.setInputMask("")
+        self.StaffLoginPassword.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.StaffLoginPassword.setObjectName("StaffLoginPassword")
         self.nologinbutton = QtWidgets.QPushButton(Dialog)
         self.nologinbutton.setGeometry(QtCore.QRect(530, 200, 191, 41))
         font = QtGui.QFont()
