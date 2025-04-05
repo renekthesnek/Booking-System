@@ -149,6 +149,7 @@ class ConfirmBookingForm(QDialog):
             except:
                 self.bookingid = 1
             performanceid = cursor.execute("Select Performance_ID from Performances where Performance_title = ?", (self.performance,)).fetchone()[0]
+            self.calculate_total_price()
             totalprice = str(self.total_price) + ".00"
             bookingdate = datetime.datetime.now().strftime("%Y-%m-%d")
             cursor.execute("INSERT INTO Bookings VALUES (?,?,?,?,?)", (self.bookingid,userID,performanceid,bookingdate,totalprice))

@@ -4,7 +4,7 @@ import pyodbc
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from PyQt5.QtWidgets import QApplication, QDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QDialog, QTableWidgetItem, QMessageBox
 
 if __name__ == "__main__":
     from ApproveBookings import Ui_Dialog
@@ -28,19 +28,22 @@ class ApproveBookingsForm(QDialog):
         self.firstrecord()
         
     def setuptable(self,sqlquery,headers):
-        #use tablewidget ig
         cnxn = self.connect()
         cursor = cnxn.cursor()
         cursor.execute(sqlquery)
         data = cursor.fetchall()
-        self.ui.tableWidget.setRowCount(len(data))
-        self.ui.tableWidget.setColumnCount(len(data[0]))
-        for header in headers:
-            self.ui.tableWidget.setHorizontalHeaderItem(headers.index(header), QTableWidgetItem(header))
-        for i in range(len(data)):
-            for j in range(len(data[0])):
-                item = QTableWidgetItem(str(data[i][j]))
-                self.ui.tableWidget.setItem(i, j, item)
+        try:
+            self.ui.tableWidget.setRowCount(len(data))
+            self.ui.tableWidget.setColumnCount(len(data[0]))
+            for header in headers:
+                self.ui.tableWidget.setHorizontalHeaderItem(headers.index(header), QTableWidgetItem(header))
+            for i in range(len(data)):
+                for j in range(len(data[0])):
+                    item = QTableWidgetItem(str(data[i][j]))
+                    self.ui.tableWidget.setItem(i, j, item)
+        except:
+            QMessageBox.critical(self, "Error", "No Bookings found")
+            self.switch_to_Staff_console()
             
     def updatewidgets(self,data):
         bookingID = data[0]
