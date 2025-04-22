@@ -27,6 +27,8 @@ class StaffConsoleForm(QDialog):
             self.ui.loggedindisplay.setText("Not Logged In")
         else:
             self.ui.loggedindisplay.setText("logged in as " + UserName)
+            
+    
 
     def switch_to_main_menu(self):
         self.close()

@@ -27,8 +27,10 @@ class ApproveBookingsForm(QDialog):
         
         self.firstrecord()
         
+    
+    def 
+        
     def setuptable(self,sqlquery,headers):
-        #use tablewidget ig
         cnxn = self.connect()
         cursor = cnxn.cursor()
         cursor.execute(sqlquery)
