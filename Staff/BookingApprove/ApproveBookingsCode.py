@@ -22,13 +22,29 @@ class ApproveBookingsForm(QDialog):
         self.ui.FirstRecordButton.clicked.connect(self.firstrecord)
         self.ui.NextRecordButton.clicked.connect(self.nextrecord)
         self.ui.PreviousRecordButton.clicked.connect(self.previousrecord)
+        self.ui.ApproveBookingButton.clicked.connect(self.approvebooking)
+        self.ui.DenyBookingButton.clicked.connect(self.denybooking)
         self.ui.tableWidget.setStyleSheet("background-color: rgb(126, 126, 126);")
-        self.setuptable("SELECT * FROM Bookings",["BookingID", "PerformanceID", "UserID", "Booking Date", "Booking Price"])
+        self.setuptable("SELECT Booking_ID, userID, performance_id, booking_date, total_price FROM Bookings where booking_status = 'Pending'",["BookingID", "PerformanceID", "UserID", "Booking Date", "Booking Price"])
         
         self.firstrecord()
         
     
-    def 
+    def approvebooking(self):
+        cnxn = self.connect()
+        cursor = cnxn.cursor()
+        cursor.execute("update Bookings set booking_status = 'Approved' where Booking_ID = ?", (self.ui.BookingIDDisplay.text(),))
+        cnxn.commit()
+        self.setuptable("SELECT Booking_ID, userID, performance_id, booking_date, total_price FROM Bookings where booking_status = 'Pending'",["BookingID", "PerformanceID", "UserID", "Booking Date", "Booking Price"])
+        self.firstrecord()
+    
+    def denybooking(self):
+        cnxn = self.connect()
+        cursor = cnxn.cursor()
+        cursor.execute("delete from Bookings where Booking_ID = ?", (self.ui.BookingIDDisplay.text(),))
+        cnxn.commit()
+        self.setuptable("SELECT Booking_ID, userID, performance_id, booking_date, total_price FROM Bookings where booking_status = 'Pending'",["BookingID", "PerformanceID", "UserID", "Booking Date", "Booking Price"])
+        self.firstrecord()
         
     def setuptable(self,sqlquery,headers):
         cnxn = self.connect()

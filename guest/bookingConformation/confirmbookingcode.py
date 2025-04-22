@@ -152,7 +152,7 @@ class ConfirmBookingForm(QDialog):
             self.calculate_total_price()
             totalprice = str(self.total_price) + ".00"
             bookingdate = datetime.datetime.now().strftime("%Y-%m-%d")
-            cursor.execute("INSERT INTO Bookings VALUES (?,?,?,?,?)", (self.bookingid,userID,performanceid,bookingdate,totalprice))
+            cursor.execute("INSERT INTO Bookings VALUES (?,?,?,?,?,?)", (self.bookingid,userID,performanceid,bookingdate,totalprice,"Pending"))
             rows_affected = cursor.rowcount
             if rows_affected > 0:
                 for seat in self.booked_seats:
