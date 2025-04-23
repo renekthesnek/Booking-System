@@ -2649,7 +2649,7 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.loggedindisplay.setText(_translate("Dialog", "logged in as:"))
         self.TitleLabel.setText(_translate("Dialog", "Title:"))
-        self.stagegraphic.setText(_translate("Dialog", "STAGE"))
         self.EditSeatsForPeformaceLabel.setText(_translate("Dialog", "Edit seats for peformance"))
         self.Backtostaffconsolebutton.setText(_translate("Dialog", "Back to staff console"))
+        self.stagegraphic.setText(_translate("Dialog", "STAGE"))
         self.ConfirmButton.setText(_translate("Dialog", "Confirm"))

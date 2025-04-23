@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(93, 93, 93);</string>
+  </property>
+  <widget class="QLabel" name="Title">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>10</y>
+     <width>461</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans Extrabold</family>
+     <pointsize>26</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 238);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string>Data Viewer</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>310</y>
+     <width>981</width>
+     <height>281</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>100</y>
+     <width>421</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 238);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Panel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <property name="lineWidth">
+    <number>3</number>
+   </property>
+   <widget class="QPushButton" name="NextRecordButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>110</y>
+      <width>181</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans Extrabold</family>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
+    <property name="text">
+     <string>Next Record</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PreviousRecordButton">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>110</y>
+      <width>201</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans Extrabold</family>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
+    <property name="text">
+     <string>Previous Record</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="RecordCombobox">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>70</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="searchInput">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>20</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="RecordDisplay">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>70</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>record:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Searchbutton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Search</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="BackToMenuButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>160</y>
+      <width>391</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans Extrabold</family>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
+    <property name="text">
+     <string>Return To Menu</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QFrame" name="frame_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>100</y>
+     <width>541</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 238);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Panel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <property name="lineWidth">
+    <number>3</number>
+   </property>
+   <widget class="QPushButton" name="usersbutton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Users</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="seatstatesbutton">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>20</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Seats States</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="performancesbutton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>70</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Performances</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bookingsbutton">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>70</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Bookings</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="SeatsButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>120</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Seats</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bookingseatsbutton">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>120</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Booking Seats</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="SelectedDisplay">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>20</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>Selected:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="SelectedMultiDisplay">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>60</y>
+      <width>201</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>13</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 238);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -23,6 +23,7 @@ class StaffConsoleForm(QDialog):
         self.ui.ToPeformanceMenuButton.clicked.connect(self.switch_to_CreateEditConsole)
         self.ui.EditSeatsForPeformanceButton.clicked.connect(self.switch_to_seat_editor)
         self.ui.ProcessBookingsButton.clicked.connect(self.switch_to_approve_bookings)
+        self.ui.DataViewerButton.clicked.connect(self.switch_to_data_viewer)
         if UserName == "No Parsed Username":
             self.ui.loggedindisplay.setText("Not Logged In")
         else:
@@ -55,6 +56,13 @@ class StaffConsoleForm(QDialog):
         self.close()
         from BookingApprove import ApproveBookingsForm
         newwindow = ApproveBookingsForm()
+        newwindow.show()
+        newwindow.exec_()
+    
+    def switch_to_data_viewer(self):
+        self.close()
+        from ViewData import DataViewerForm
+        newwindow = DataViewerForm()
         newwindow.show()
         newwindow.exec_()
 def main():
