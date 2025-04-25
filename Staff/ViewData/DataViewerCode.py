@@ -1,10 +1,11 @@
 import sys
 import os
+import pyodbc
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-from PyQt5.QtWidgets import QApplication, QDialog
+from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox, QTableWidgetItem
 if __name__ == "__main__":
     from DataViewer import Ui_Dialog
 else:
@@ -15,64 +16,102 @@ else:
 
 class DataViewerForm(QDialog):
     def __init__(self, UserName="No Parsed Username"):
+        super(DataViewerForm, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setWindowTitle("Booking Confirmation")
         self.ui.BackToMenuButton.clicked.connect(self.switch_to_main_menu)
         
-        self.usersbutton_click_count = 0
-        self.seatsbutton_click_count = 0
-        self.performancesbutton_click_count = 0
-        self.bookingsbutton_click_count = 0
-        self.bookingseatsbutton_click_count = 0
-        self.seatstatesbutton_click_count = 0
+        self.ui.usersbutton.clicked.connect(lambda: self.updatelabel("Users"))
+        self.ui.SeatsButton.clicked.connect(lambda: self.updatelabel("Seats"))
+        self.ui.performancesbutton.clicked.connect(lambda: self.updatelabel("Performances"))
+        self.ui.bookingsbutton.clicked.connect(lambda: self.updatelabel("Bookings"))
+        self.ui.bookingseatsbutton.clicked.connect(lambda: self.updatelabel("Booking Seats"))
+        self.ui.seatstatesbutton.clicked.connect(lambda: self.updatelabel("Seat States"))
         
-        self.ui.usersbutton.clicked.connect(self.on_usersbutton_clicked)
-        self.ui.SeatsButton.clicked.connect(self.on_seatsbutton_clicked)
-        self.ui.performancesbutton.clicked.connect(self.on_performancesbutton_clicked)
-        self.ui.bookingsbutton.clicked.connect(self.on_bookingsbutton_clicked)
-        self.ui.bookingseatsbutton.clicked.connect(self.on_bookingseatsbutton_clicked)
-        self.ui.seatstatesbutton.clicked.connect(self.on_seatstatesbutton_clicked)
-                
-    def on_usersbutton_clicked(self):
-        print("on_usersbutton_clicked called")
-        self.usersbutton_click_count += 1
-        self.updatelabel("Users", self.usersbutton_click_count)
-        print(f"Button 1 clicked {self.usersbutton_click_count} times")
-
-    def on_seatsbutton_clicked(self):
-        self.seatsbutton_click_count += 1
-        self.updatelabel("Seats", self.seatsbutton_click_count)
-        print(f"Button 2 clicked {self.seatsbutton_click_count} times")
-
-    def on_performancesbutton_clicked(self):
-        self.performancesbutton_click_count += 1
-        self.updatelabel("Performances", self.performancesbutton_click_count)
-        print(f"Button 3 clicked {self.performancesbutton_click_count} times")
-
-    def on_bookingsbutton_clicked(self):
-        self.bookingsbutton_click_count += 1
-        self.updatelabel("Bookings", self.bookingsbutton_click_count)
-        print(f"Button 4 clicked {self.bookingsbutton_click_count} times")
-
-    def on_bookingseatsbutton_clicked(self):
-        self.bookingseatsbutton_click_count += 1
-        self.updatelabel("Booking Seats", self.bookingseatsbutton_click_count)
-        print(f"Button 5 clicked {self.bookingseatsbutton_click_count} times")
-
-    def on_seatstatesbutton_clicked(self):
-        self.seatstatesbutton_click_count += 1
-        self.updatelabel("Seat States", self.seatstatesbutton_click_count)
-        print(f"Button 6 clicked {self.seatstatesbutton_click_count} times")
-
+        self.ui.NextRecordButton.clicked.connect(self.nextrecord)
         
+        self.cursor = None
+        self.currentrow = 0
         
-    def updatelabel(self, text, value=None):
-        if value is not None:
-            currenttext = self.ui.SelectedMultiDisplay.text()
-            currenttext += "\n" + str(text) + ": " + str(value)
-            self.ui.SelectedMultiDisplay.setText(currenttext)
+        self.ui.SelectedMultiDisplay.setText("")
+
+    
+    def nextrecord(self):
+        if self.cursor is None:
+            table = self.ui.SelectedMultiDisplay.text().split("\n")
+            if table != "":
+                cnxn = self.connect()
+                self.cursor = cnxn.cursor()
+                table_names = ', '.join(['Bookings' if t == 'Booking' else 'BookingSeats' if t == 'Booking Seats' else 'SeatStatus' if t == 'Seat States' else t for t in table])
+                self.cursor.execute(f"SELECT * FROM {table_names}")
+        data = self.cursor.fetchone()
+        if data is None:
+            QMessageBox.critical(self, "Error", "No more data available in the table.")
+            return
+        else:
+            self.currentrow += 1
+            self.ui.tableWidget.setRowCount(1)
+            for i, item in enumerate(data):
+                self.ui.tableWidget.setItem(0, i, QTableWidgetItem(str(item)))
         
+
+    def updatetable(self):
+        self.cursor = None
+        self.currentrow = 0
+        cnxn = self.connect()
+        cursor = cnxn.cursor()
+        tables = self.ui.SelectedMultiDisplay.text().split("\n")
+        
+        updated_tables = []
+        for table in tables:
+            if table == "Users": updated_tables.append("Users")
+            elif table == "Seats": updated_tables.append("Seats")
+            elif table == "Performances": updated_tables.append("Performances")
+            elif table == "Bookings": updated_tables.append("Bookings")
+            elif table == "Booking Seats": updated_tables.append("BookingSeats")
+            elif table == "Seat States": updated_tables.append("SeatStatus")
+            else: continue
+
+        sqlquery = "SELECT * FROM " + ", ".join(updated_tables)
+        if updated_tables != []:
+            cursor.execute(sqlquery)
+        
+        if cursor.description is not None:
+            data = cursor.fetchall()
+            self.ui.tableWidget.clearContents()
+            self.ui.tableWidget.setRowCount(len(data))
+            self.ui.tableWidget.setColumnCount(len(cursor.description))
+            self.ui.tableWidget.setHorizontalHeaderLabels([desc[0] for desc in cursor.description])
+            for i, row in enumerate(data):
+                for j, value in enumerate(row):
+                    self.ui.tableWidget.setItem(i, j, QTableWidgetItem(str(value)))#
+        else:
+            self.ui.tableWidget.clearContents()
+            self.ui.tableWidget.setRowCount(0)
+            self.ui.tableWidget.setColumnCount(0)
+            
+    def updatelabel(self, text):
+        if text in self.ui.SelectedMultiDisplay.text():
+            if len(self.ui.SelectedMultiDisplay.text().split("\n")) > 1:
+                self.ui.SelectedMultiDisplay.setText(self.ui.SelectedMultiDisplay.text().replace("\n"+text, "")) 
+            else:
+                self.ui.SelectedMultiDisplay.setText(self.ui.SelectedMultiDisplay.text().replace(text, ""))
+        else:
+            if len(self.ui.SelectedMultiDisplay.text()) > 1:
+                self.ui.SelectedMultiDisplay.setText(self.ui.SelectedMultiDisplay.text() + "\n" + text)
+            else:
+                self.ui.SelectedMultiDisplay.setText(self.ui.SelectedMultiDisplay.text() + text)
+        
+        self.updatetable()
+        
+    def connect (self):
+        fileabspath = self.highlightedabspath = os.path.join(os.path.dirname(__file__), "..", "..", "databaselogin.txt")
+        with open(fileabspath, 'r') as f:
+            cs = f.read()
+        cnxn = pyodbc.connect(cs)
+        return cnxn
+    
     def switch_to_main_menu(self):
         self.close()
         from StaffMainMenu import StaffConsoleForm
