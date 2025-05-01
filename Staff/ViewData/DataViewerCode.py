@@ -11,8 +11,6 @@ if __name__ == "__main__":
 else:
     from .DataViewer import Ui_Dialog
 
-#change from counting on button click to checking if the buttons text is in the label already, if it is then remove 
-#simple right?
 
 class DataViewerForm(QDialog):
     def __init__(self, UserName="No Parsed Username"):
@@ -54,7 +52,7 @@ class DataViewerForm(QDialog):
             self.ui.tableWidget.setRowCount(1)
             for i, item in enumerate(data):
                 self.ui.tableWidget.setItem(0, i, QTableWidgetItem(str(item)))
-        
+    
 
     def updatetable(self):
         self.cursor = None
