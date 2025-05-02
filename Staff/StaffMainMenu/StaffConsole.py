@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\Staff\StaffMainMenu\StaffConsole.ui'
+# Form implementation generated from reading ui file '.\StaffConsole.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -49,16 +49,8 @@ class Ui_Dialog(object):
         self.EditSeatsForPeformanceButton.setFont(font)
         self.EditSeatsForPeformanceButton.setStyleSheet("color: rgb(238, 238, 238);")
         self.EditSeatsForPeformanceButton.setObjectName("EditSeatsForPeformanceButton")
-        self.DataViewerButton = QtWidgets.QPushButton(Dialog)
-        self.DataViewerButton.setGeometry(QtCore.QRect(530, 350, 291, 51))
-        font = QtGui.QFont()
-        font.setFamily("Open Sans Extrabold")
-        font.setPointSize(18)
-        self.DataViewerButton.setFont(font)
-        self.DataViewerButton.setStyleSheet("color: rgb(238, 238, 238);")
-        self.DataViewerButton.setObjectName("DataViewerButton")
         self.ProcessBookingsButton = QtWidgets.QPushButton(Dialog)
-        self.ProcessBookingsButton.setGeometry(QtCore.QRect(150, 350, 291, 51))
+        self.ProcessBookingsButton.setGeometry(QtCore.QRect(350, 350, 291, 51))
         font = QtGui.QFont()
         font.setFamily("Open Sans Extrabold")
         font.setPointSize(18)
@@ -84,6 +76,5 @@ class Ui_Dialog(object):
         self.loggedindisplay.setText(_translate("Dialog", "logged in as:"))
         self.ToPeformanceMenuButton.setText(_translate("Dialog", "Create/Edit Peformances"))
         self.EditSeatsForPeformanceButton.setText(_translate("Dialog", "Edit Seats for Peformance"))
-        self.DataViewerButton.setText(_translate("Dialog", "Data Viewer"))
         self.ProcessBookingsButton.setText(_translate("Dialog", "Process Bookings"))
         self.BackToMenuButton.setText(_translate("Dialog", "Return To Menu"))

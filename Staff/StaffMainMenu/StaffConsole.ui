@@ -109,32 +109,10 @@
     <string>Edit Seats for Peformance</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="DataViewerButton">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>350</y>
-     <width>291</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Open Sans Extrabold</family>
-     <pointsize>18</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: rgb(238, 238, 238);</string>
-   </property>
-   <property name="text">
-    <string>Data Viewer</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="ProcessBookingsButton">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>350</x>
      <y>350</y>
      <width>291</width>
      <height>51</height>
