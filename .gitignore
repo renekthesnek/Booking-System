@@ -175,3 +175,8 @@ cython_debug/
 
 #ignoring databaselogin.txt
 databaselogin.txt
+
+#transfer stuff
+requirements.txt
+main.py
+readme.md
