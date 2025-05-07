@@ -21,9 +21,10 @@ class SeatEditorForm(QDialog):
         super(SeatEditorForm, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        self.setWindowTitle("Booking Confirmation")
+        self.setWindowTitle("block seats")
         self.ui.Backtostaffconsolebutton.clicked.connect(self.switch_to_Staff_console)
         self.ui.ConfirmButton.clicked.connect(self.updateseats)
+        self.ui.comboBox.currentIndexChanged.connect(self.updatedisplays)
         self.comboboxes = {}
         self.offset = 10
         self.widgets = 0
@@ -39,9 +40,20 @@ class SeatEditorForm(QDialog):
         self.emptyabspath = os.path.join(os.path.dirname(__file__), "..",'..','guest', "images", "empty.png")
         self.blockedabspath = os.path.join(os.path.dirname(__file__), "..",'..','guest', "images", "blocked.png")
         self.getpeformancedata()
-        self.populate_lists()
-        self.getseatstates()
+        self.updatedisplays()
+        self.getseatstates()  
     
+    def updatedisplays(self):
+        self.seats = []
+        self.performance = self.ui.comboBox.currentText()
+        self.booked_seats = []
+        self.populate_lists()
+        for seatdata in self.seats:
+            seatlabel = seatdata["label_object"]
+            if seatdata["status"] == "booked":
+                seatlabel.setPixmap(QPixmap(self.blockedabspath))
+            elif seatdata["status"] == "empty":
+                seatlabel.setPixmap(QPixmap(self.emptyabspath))
     def mousePressEvent(self, event):
         for seatdata in self.seats:
             seatlabel = seatdata["label_object"]
@@ -110,8 +122,10 @@ class SeatEditorForm(QDialog):
         if self.widgets >= 4:
                 self.ui.scrollAreaWidgetContents.setFixedSize(self.ui.scrollAreaWidgetContents.width(), self.ui.scrollAreaWidgetContents.height() - 75)
         
-        
-        dictseatname = seatname[0] + "_"+ seatname[1]  + seatname[2]
+        if len(seatname) == 3:
+            dictseatname = seatname[0] + "_"+ seatname[1]
+        else:
+            dictseatname = seatname[0] + "_"+ seatname[1]  + seatname[2]
         Blocked_seats = [dict(t) for t in {tuple(d.items()) for d in Blocked_seats}]
         Blocked_seats = [item for item in Blocked_seats if item["seat_id"] != dictseatname]
             
@@ -123,20 +137,19 @@ class SeatEditorForm(QDialog):
     def populate_lists(self):
         self.seats = []
         self.labels = {}
-        self.performance = self.ui.comboBox.currentText()
         cnxn = self.connect()
         cursor = cnxn.cursor()
         cursor.execute("SELECT performance_id FROM Performances WHERE Performance_title = ?", (self.performance))
         performanceid = cursor.fetchone()
         if performanceid == None:
             QMessageBox.critical(self, "Error", "No Performances found")
-            self.switch_to_Staff_console()
+            self.switch_to_main_menu()
         else:
             performanceid = performanceid[0]
         index = 0
         for i in (["A","B","C","D","E","F","G","H","I","J"]):
             for j in range(20):
-                if j <= 10:
+                if (j+1) <= 10:
                     seatRow = f"Row{i}_A"
                 else:
                     seatRow = f"Row{i}_B"
@@ -156,7 +169,10 @@ class SeatEditorForm(QDialog):
         cursor.execute("SELECT Performance_id FROM Performances WHERE performance_title = ?", (self.ui.comboBox.currentText(),))
         self.performanceid = cursor.fetchone()[0]
         for seat in Blocked_seats:
-            seat["seat_id"] = seat["seat_id"][0]+seat["seat_id"][2]+seat["seat_id"][3]
+            if len(seat["seat_id"]) == 4:
+                seat["seat_id"] = seat["seat_id"][0]+seat["seat_id"][2]+seat["seat_id"][3]
+            elif len(seat["seat_id"]) == 3:
+                seat["seat_id"] = seat["seat_id"][0]+seat["seat_id"][2]
             cursor.execute("UPDATE seatstatus SET seat_state = ? WHERE seat_id = ? AND performance_id = ?", (seat["status"],seat["seat_id"],self.performanceid))
         rows_affected = cursor.rowcount
         if rows_affected > 0:

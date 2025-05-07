@@ -18,7 +18,7 @@ class StaffConsoleForm(QDialog):
         super(StaffConsoleForm, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        self.setWindowTitle("Booking Confirmation")
+        self.setWindowTitle("Staff console")
         self.ui.BackToMenuButton.clicked.connect(self.switch_to_main_menu)
         self.ui.ToPeformanceMenuButton.clicked.connect(self.switch_to_CreateEditConsole)
         self.ui.EditSeatsForPeformanceButton.clicked.connect(self.switch_to_seat_editor)

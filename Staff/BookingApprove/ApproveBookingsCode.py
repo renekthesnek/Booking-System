@@ -17,7 +17,7 @@ class ApproveBookingsForm(QDialog):
         super(ApproveBookingsForm, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        self.setWindowTitle("Booking Confirmation")
+        self.setWindowTitle("Approve Bookings")
         self.ui.BackToMenuButton.clicked.connect(self.switch_to_Staff_console)
         self.ui.FirstRecordButton.clicked.connect(self.firstrecord)
         self.ui.NextRecordButton.clicked.connect(self.nextrecord)
